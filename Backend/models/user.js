@@ -3,10 +3,11 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
+    user_id: {
+        // type: mongoose.Schema.Types.ObjectId,
+        type: String,
     },
-    email: {
+    account: {
         type: String,
         required: true,
         unique: true,
@@ -15,7 +16,7 @@ const userSchema = new mongoose.Schema({
             message: 'Invalid email address'
         }
     },
-    password: {
+    passcode: {
         type: String,
         required: true,
         validate: {
@@ -25,7 +26,7 @@ const userSchema = new mongoose.Schema({
             message: 'Password is too weak',
         }
     },
-    fullName: {
+    user_name: {
         type: String,
         validate: {
             validator: (value) => /^[a-zA-Z ]{1,50}$/.test(value),

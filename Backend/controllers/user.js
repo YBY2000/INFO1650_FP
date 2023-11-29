@@ -61,11 +61,11 @@ exports.deleteUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find({}, 'email fullName password -_id');
+        const users = await User.find({}, '-_id');
         if (!users || users.length === 0) {
             return res.error(404, 'No users found');
         }
-
+        console.log(users);
         res.success({ users }, 'Users retrieved successfully');
     } catch (error) {
         res.error(500, 'Internal server error');

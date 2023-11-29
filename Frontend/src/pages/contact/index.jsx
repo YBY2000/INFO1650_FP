@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './index.css'; // Import the CSS file for styling
+import useRequest from '../../hooks/useRequest';
 
 const Contact = () => {
+  const { request, isLoading, error } = useRequest('/user/getAll', { method: 'GET' });
+  const fetchData = async () => {
+    const dataList = await request();
+    if (!error) {
+      console.log(dataList);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
   return (
     <div className="contact-container">
       <h1 className="contact-heading">Contact Us</h1>

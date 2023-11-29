@@ -1,40 +1,34 @@
-// LoginPage.js
-
 import React, { useState } from 'react';
-import './index.scss'; // Import styles from index.css
+import './index.scss';
 import { useNavigate } from 'react-router-dom';
+import useRequest from '../../hooks/useRequest';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const handleLogin = (e) => {
+  const { request, isLoading, error } = useRequest('/auth/login', { method: 'POST' });
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       alert('Please enter email and password');
       return;
     }
+
     const requestBody = { email, password };
-    fetch('http://localhost:3000/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody)
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Login successful!');
-          localStorage.setItem('token', data.data.token);
-          navigate('/home');
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+
+    try {
+      const data = await request(requestBody);
+      if (data.success) {
+        alert('Login successful!');
+        localStorage.setItem('token', data.data.token);
+        navigate('/home');
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
   return (
     <div className="login-page">
