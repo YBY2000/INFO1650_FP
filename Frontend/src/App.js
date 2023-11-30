@@ -6,6 +6,8 @@ import Jobs from './pages/jobs';
 import Home from './pages/home';
 import Layout from './components/layout';
 import Login from './pages/login';
+import UserManagement from './pages/userManagement';
+import UserComments from './pages/userComments';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/contact" element={<Example />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/users" element={<UserManagement />} />
+          <Route path="/comments" element={<UserComments />} />
         </Routes>
       </Layout>
     </BrowserRouter>
