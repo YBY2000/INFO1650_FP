@@ -8,5 +8,6 @@ const router = express.Router();
 router.use('/auth', authRoutes);
 router.use('/user', userRoutes);
 router.use('/attraction', attractionRoutes);
+router.use('/country', require('../controllers/country').getAllCountries);
 
 module.exports = router;

@@ -3,12 +3,19 @@ const mongoose = require('mongoose');
 
 exports.createUser = async (req, res) => {
     try {
-        const { email, password, fullName } = req.body;
+        const { email, password, firstName, lastName, gender, country, description, avatar, age, interest } = req.body;
         const user = new User({
             userId: new mongoose.Types.ObjectId(),
             email,
             password,
-            fullName
+            fullName: firstName + ' ' + lastName,
+            gender,
+            country,
+            description,
+            avatar,
+            age,
+            interest,
+            userType: 0, // 0 -- normal user, 1 -- admin
         });
         await user.save();
         res.success({ user }, 'User created successfully');
