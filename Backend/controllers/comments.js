@@ -36,6 +36,7 @@ exports.addComment = async (req, res) => {
             review_time,
             star_rating,
             detailed_review,
+            status: 1
         });
 
         await newComment.save();

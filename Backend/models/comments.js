@@ -13,7 +13,11 @@ const schema = new mongoose.Schema({
     },
     star_rating: Number,
     avatar: String,
-    detailed_review: String
+    detailed_review: String,
+    status: {
+        type: Number,
+        default: 1
+    }// 1: approved, 0:  rejected
 });
 
 
