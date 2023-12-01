@@ -1,16 +1,16 @@
 import React, { useState,useEffect } from 'react';
-import ''; // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest';
 
 const Detail = () => {
+    const { request, isLoading, error } = useRequest('/user/getAll', { method: 'GET' });
     const [detailData, setDetailData] = useState(null);
     useEffect(() => {
         const fetchData = async () => {
-            // 使用您的请求钩子或其他方式获取数据
-            const response = await useRequest('');
-            setDetailData(response);
+            const dataList = await request();
+            if (!error) {
+                console.log(dataList);
+            }
         };
-
         fetchData();
     }, []);
 

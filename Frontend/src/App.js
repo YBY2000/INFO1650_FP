@@ -8,13 +8,14 @@ import Layout from './components/layout';
 import Login from './pages/login';
 import UserManagement from './pages/userManagement';
 import UserComments from './pages/userComments';
+import Detail from "./pages/detail";
 
 function App() {
   return (
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/Detail" element={Detail}/>
+          <Route path="/detail" element={<Detail />}/>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
