@@ -25,15 +25,9 @@ const userSchema = new mongoose.Schema({
             message: 'Password is too weak',
         }
     },
-    firstName: {
+    fullName: {
         type: String,
-        validate: {
-            validator: (value) => /^[a-zA-Z ]{1,50}$/.test(value),
-            message: 'Invalid full name format',
-        },
-    },
-    lastName: {
-        type: String,
+        required: true,
         validate: {
             validator: (value) => /^[a-zA-Z ]{1,50}$/.test(value),
             message: 'Invalid full name format',

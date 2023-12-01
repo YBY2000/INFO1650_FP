@@ -5,7 +5,6 @@ const config = require('../config/index');
 const secretKey = config.secretKey;
 
 exports.logIn = async (req, res) => {
-    console.log(req.body)
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
