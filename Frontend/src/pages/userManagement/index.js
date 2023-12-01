@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
 import './index.sass'; // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest';
-import { Table,Space,Input } from 'antd';
+import { Table,Space,Input,Button } from 'antd';
 import { AudioOutlined } from '@ant-design/icons';
 
 
@@ -25,142 +25,168 @@ const Contact = () => {
       console.log(dataList);
     }
   };
+
+  const [filteredInfo, setFilteredInfo] = useState({});
+  const [sortedInfo, setSortedInfo] = useState({});
+  const handleChange = (pagination, filters, sorter) => {
+    console.log('Various parameters', pagination, filters, sorter);
+    setFilteredInfo(filters);
+    setSortedInfo(sorter);
+  };
+  const clearFilters = () => {
+    setFilteredInfo({});
+  };
+  const clearAll = () => {
+    setFilteredInfo({});
+    setSortedInfo({});
+  };
+  const setAgeSort = () => {
+    setSortedInfo({
+      order: 'descend',
+      columnKey: 'age',
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-const columns = [
+
+
+  
+  const columns = [
+      {
+          title: 'ID',
+          dataIndex: 'id',
+          defaultSortOrder: 'descend',
+          sorter: (a, b) => a.id - b.id,
+        },
     {
-        title: 'ID',
-        dataIndex: 'id',
-        defaultSortOrder: 'descend',
-        width: 100, // 设置列宽
-        sorter: (a, b) => a.id - b.id,
-      },
-  {
-    title: 'User Name',
-    dataIndex: 'name',
-    width: 300, // 设置列宽
-    filters: [
-      {
-        text: 'Joe',
-        value: 'Joe',
-      },
-      {
-        text: 'Jim',
-        value: 'Jim',
-      },
-      {
-        text: 'Submenu',
-        value: 'Submenu',
-        children: [
-          {
-            text: 'Green',
-            value: 'Green',
-          },
-          {
-            text: 'Black',
-            value: 'Black',
-          },
-        ],
-      },
-    ],
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    onFilter: (value, record) => record.name.indexOf(value) === 0,
-    sorter: (a, b) => a.name.length - b.name.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
-  },
-  {
-    title: 'Comments',
-    dataIndex: 'usercomments',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.usercomments - b.age,
-  },
-  {
-    title: 'E-mail',
-    dataIndex: 'email',
-    filters: [
-      {
-        text: 'gmail',
-        value: 'gmail',
-      },
-      {
-        text: '126',
-        value: '126',
-      },
-      {
-        text: '163',
-        value: '163',
-      },
-      {
-        text: 'Submenu',
-        value: 'Submenu',
-        children: [
-          {
-            text: 'G',
-            value: 'G',
-          },
-          {
-            text: 'B',
-            value: 'B',
-          },
-        ],
-      },
-    ],
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    onFilter: (value, record) => record.email.indexOf(value) === 0,
-    sorter: (a, b) => a.email.length - b.email.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London',
-      },
-      {
-        text: 'New York',
-        value: 'New York',
-      },
-    ],
-    onFilter: (value, record) => record.address.indexOf(value) === 0,
-  },
-  {
-    title: 'Action',
-    key: 'operation',
-    fixed: 'right',
-    width: 200,
-    render: () => <div><a>Delete</a>,<a>Save</a>,<a>Edit</a></div>
-  },
-];
+      title: 'User Name',
+      dataIndex: 'name',
 
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
+      filters: [
+        {
+          text: 'Joe',
+          value: 'Joe',
+        },
+        {
+          text: 'Jim',
+          value: 'Jim',
+        },
+        {
+          text: 'Submenu',
+          value: 'Submenu',
+          children: [
+            {
+              text: 'Green',
+              value: 'Green',
+            },
+            {
+              text: 'Black',
+              value: 'Black',
+            },
+          ],
+        },
+      ],
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      onFilter: (value, record) => record.name.indexOf(value) === 0,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend'],
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.age - b.age,
+    },
+    {
+      title: 'Comments',
+      dataIndex: 'usercomments',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.usercomments - b.age,
+    },
+    {
+      title: 'E-mail',
+      dataIndex: 'email',
+      filters: [
+        {
+          text: 'gmail',
+          value: 'gmail',
+        },
+        {
+          text: '126',
+          value: '126',
+        },
+        {
+          text: '163',
+          value: '163',
+        },
+        {
+          text: 'Submenu',
+          value: 'Submenu',
+          children: [
+            {
+              text: 'G',
+              value: 'G',
+            },
+            {
+              text: 'B',
+              value: 'B',
+            },
+          ],
+        },
+      ],
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      onFilter: (value, record) => record.email.indexOf(value) === 0,
+      sorter: (a, b) => a.email.length - b.email.length,
+      sortDirections: ['descend'],
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      filters: [
+        {
+          text: 'London',
+          value: 'London',
+        },
+        {
+          text: 'New York',
+          value: 'New York',
+        },
+      ],
+      onFilter: (value, record) => record.address.indexOf(value) === 0,
+    },
+    {
+      title: 'Action',
+      key: 'operation',
+      fixed: 'right',
+      width: 200,
+      render: () => <div><a>Delete</a>,<a>Save</a>,<a>Edit</a></div>
+    },
+  ];
 
-return(
-<Space direction="vertical">
-<Search
-      placeholder="input search text"
-      allowClear
-      enterButton="Search"
-      size="large"
-      onSearch={onSearch}
-    />
-    <Table columns={columns} dataSource={data} onChange={onChange} scroll={{x: 1500,}}/>
-</Space>)
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
+
+  return(
+<>
+      <Space
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        <Button onClick={setAgeSort}>Sort age</Button>
+        <Button onClick={clearFilters}>Clear filters</Button>
+        <Button onClick={clearAll}>Clear filters and sorters</Button>
+      </Space>
+      <Table columns={columns} dataSource={data} onChange={handleChange} />
+    </>)
 }
 
 const data = [
