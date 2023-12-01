@@ -1,5 +1,4 @@
 const Attraction = require('../models/attraction');
-const mongoose = require('mongoose');
 exports.getAllAttractions = async (req, res) => {
     try {
         const attractions = await Attraction.find({}, '-_id');
@@ -9,4 +8,13 @@ exports.getAllAttractions = async (req, res) => {
     }
 };
 
+exports.getAttractionDetail = async (req, res) => {
+    try {
+        const { id } = req.query;
+        const attraction = await Attraction.findOne({id}, '-_id');
+        res.success({ attraction }, 'Attraction detail retrieved successfully');
+    } catch (error) {
+        res.error(500, 'Internal server error');
+    }
+}
 module.exports = exports;
