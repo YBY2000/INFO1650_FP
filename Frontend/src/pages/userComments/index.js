@@ -83,9 +83,16 @@ const Contact = () => {
       key: 'attractionID',
     },
     {
+      title: 'Attraction Name',
+      dataIndex: 'attractionName',
+      key: 'attractionName',
+    },
+    {
       title: 'Commentscount',
       dataIndex: 'commentsCount',
       key: 'commentsCount',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.commentsCount - b.commentsCount,
     },
     {
       title: 'Latest Comment creation time:',
@@ -108,7 +115,18 @@ const Contact = () => {
     data.push({
       key: i.toString(),
       attractionID: '0028555230',
+      attractionName: 'The Forbidden City',
       commentsCount: '60',
+      latestCommentCreationTime: '10.3.4.5654',
+      email:'zGreenhk@163.com',
+    });
+  }
+  for (let i = 3; i < 6; ++i) {
+    data.push({
+      key: i.toString(),
+      attractionID: '0028555230',
+      attractionName: 'The Forbidden City',
+      commentsCount: '20',
       latestCommentCreationTime: '10.3.4.5654',
       email:'zGreenhk@163.com',
     });

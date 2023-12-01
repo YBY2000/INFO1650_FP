@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import './index.sass'; // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest';
 import { Table,Space,Input,Button,Select } from 'antd';
-import { AudioOutlined,DownOutlined, UserOutlined} from '@ant-design/icons';
+import { AudioOutlined} from '@ant-design/icons';
 
 const handleChange = (value) => {
   console.log(`selected ${value}`);
@@ -135,7 +135,32 @@ const Contact = () => {
           marginBottom: 16,
         }}
       >
-        <Button>Sort age</Button>
+        <Select
+          defaultValue="jack"
+          style={{
+            width: 120,
+          }}
+          onChange={handleChange}
+          options={[
+            {
+              value: 'jack',
+              label: 'Jack',
+            },
+            {
+              value: 'lucy',
+              label: 'Lucy',
+            },
+            {
+              value: 'Yiminghe',
+              label: 'yiminghe',
+            },
+            {
+              value: 'disabled',
+              label: 'Disabled',
+              disabled: true,
+            },
+          ]}
+        />
         <Select
           defaultValue="lucy"
           style={{
