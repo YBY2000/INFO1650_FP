@@ -25,7 +25,7 @@ const Layout = ({ children }) => {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/contact" className="nav-link">
+            <Link to="/homepage" className="nav-link">
               Example
             </Link>
           </li>

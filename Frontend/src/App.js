@@ -8,6 +8,7 @@ import Layout from './components/layout';
 import Login from './pages/login';
 import UserManagement from './pages/userManagement';
 import UserComments from './pages/userComments';
+import Homepage from './pages/homepage/homepage.page';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/users" element={<UserManagement />} />
           <Route path="/comments" element={<UserComments />} />
+          <Route path="/homepage" element={<Homepage />} />
         </Routes>
       </Layout>
     </BrowserRouter>
