@@ -8,6 +8,8 @@ import Layout from './components/layout';
 import Login from './pages/login';
 import UserManagement from './pages/userManagement';
 import UserComments from './pages/userComments';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
