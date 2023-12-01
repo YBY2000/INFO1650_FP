@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
 import './index.sass'; // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest';
-import { Table,Space,Input } from 'antd';
+import { Table,Space,Input,Badge } from 'antd';
 import { AudioOutlined } from '@ant-design/icons';
 
 
-const { Search } = Input;
-const suffix = (
-    <AudioOutlined
-      style={{
-        fontSize: 16,
-        color: '#1677ff',
-      }}
-    />
-  );
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+const items = [
+  {
+    key: '1',
+    label: 'Action 1',
+  },
+  {
+    key: '2',
+    label: 'Action 2',
+  },
+];
 
 const Contact = () => {
   const { request, isLoading, error } = useRequest('/user/getAll', { method: 'GET' });
@@ -31,129 +31,100 @@ const Contact = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-const columns = [
+  const expandedRowRender = () => {
+    const columns = [
+      {
+        title: 'Comment_ID',
+        dataIndex: 'commentID',
+        key: 'commentID',
+      },
+      {
+        title: 'Content',
+        dataIndex: 'content',
+        key: 'content',
+      },
+      {
+        title: 'Post Data',
+        dataIndex: 'postDate',
+        key: 'postDate',
+      },
+      {
+        title: 'Status',
+        key: 'state',
+        render: () => <Badge status="success" text="enable" />,
+      },
+      {
+        title: 'Action',
+        dataIndex: 'operation',
+        key: 'operation',
+        render: () => (
+          <Space size="middle">
+            <a>Pause</a>
+            <a>Stop</a>
+          </Space>
+        ),
+      },
+    ];
+    const data = [];
+    for (let i = 0; i < 3; ++i) {
+      data.push({
+        key: i.toString(),
+        postDate: '2014-12-24 23:12:00',
+        content: 'This is production name',
+        commentID: 'Upgraded: 56',
+      });
+    }
+    return <Table columns={columns} dataSource={data} pagination={false} />;
+  };
+  const columns = [
     {
-        title: 'ID',
-        dataIndex: 'id',
-        defaultSortOrder: 'descend',
-        width: 100, // 设置列宽
-        sorter: (a, b) => a.id - b.id,
-      },
-      {
-        title: 'Attraction ID',
-        dataIndex: 'attractionid',
-        defaultSortOrder: 'descend',
-        sorter: (a, b) => a.attractionid - b.attractionid,
-      },
-  {
-    title: 'Attraction Name',
-    dataIndex: 'name',
-    width: 300, // 设置列宽
-    filters: [
-      {
-        text: 'Joe',
-        value: 'Joe',
-      },
-      {
-        text: 'Jim',
-        value: 'Jim',
-      },
-      {
-        text: 'Submenu',
-        value: 'Submenu',
-        children: [
-          {
-            text: 'Green',
-            value: 'Green',
-          },
-          {
-            text: 'Black',
-            value: 'Black',
-          },
-        ],
-      },
-    ],
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    onFilter: (value, record) => record.name.indexOf(value) === 0,
-    sorter: (a, b) => a.name.length - b.name.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Comments',
-    dataIndex: 'usercomments',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.usercomments - b.age,
-  },
-  {
-    title: 'E-mail',
-    dataIndex: 'email',
-    filters: [
-      {
-        text: 'gmail',
-        value: 'gmail',
-      },
-      {
-        text: '126',
-        value: '126',
-      },
-      {
-        text: '163',
-        value: '163',
-      },
-      {
-        text: 'Submenu',
-        value: 'Submenu',
-        children: [
-          {
-            text: 'G',
-            value: 'G',
-          },
-          {
-            text: 'B',
-            value: 'B',
-          },
-        ],
-      },
-    ],
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    onFilter: (value, record) => record.email.indexOf(value) === 0,
-    sorter: (a, b) => a.email.length - b.email.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Attraction Address',
-    dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London',
-      },
-      {
-        text: 'New York',
-        value: 'New York',
-      },
-    ],
-    onFilter: (value, record) => record.address.indexOf(value) === 0,
-  },
-  {
-    title: 'Action',
-    key: 'operation',
-    fixed: 'right',
-    width: 200,
-    render: () => <div><a>Delete</a>,<a>Save</a>,<a>Edit</a></div>
-  },
-];
-
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
-
-return(
-
-    <Table columns={columns} dataSource={data} onChange={onChange} scroll={{x: 1500,}}/>
-)
+      title: 'Attraction ID',
+      dataIndex: 'attractionID',
+      key: 'attractionID',
+    },
+    {
+      title: 'Commentscount',
+      dataIndex: 'commentsCount',
+      key: 'commentsCount',
+    },
+    {
+      title: 'Latest Comment creation time:',
+      dataIndex: 'latestCommentCreationTime',
+      key: 'latestCommentCreationTime',
+    },
+    {
+      title: 'User Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    // {
+    //   title: 'Action',
+    //   key: 'operation',
+    //   render: () => <a>Publish</a>,
+    // },
+  ];
+  const data = [];
+  for (let i = 0; i < 3; ++i) {
+    data.push({
+      key: i.toString(),
+      attractionID: '0028555230',
+      commentsCount: '60',
+      latestCommentCreationTime: '10.3.4.5654',
+      email:'zGreenhk@163.com',
+    });
+  }
+  return (
+    <>
+      <Table
+        columns={columns}
+        expandable={{
+          expandedRowRender,
+          defaultExpandedRowKeys: ['0'],
+        }}
+        dataSource={data}
+      />
+    </>
+  );
 }
 
 const data = [
