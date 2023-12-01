@@ -61,6 +61,7 @@ const Contact = () => {
           <Space size="middle">
             <a>Pause</a>
             <a>Stop</a>
+            <a>Delete</a>
           </Space>
         ),
       },
