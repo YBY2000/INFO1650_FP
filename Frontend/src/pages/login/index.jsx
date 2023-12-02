@@ -14,9 +14,7 @@ const LoginPage = () => {
       alert('Please enter email and password');
       return;
     }
-
     const requestBody = { email, password };
-
     try {
       const data = await request(requestBody);
       if (data.success) {

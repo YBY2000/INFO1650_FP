@@ -5,7 +5,6 @@ const config = require('../config/index');
 const secretKey = config.secretKey;
 
 exports.logIn = async (req, res) => {
-    console.log(req.body)
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -19,7 +18,7 @@ exports.logIn = async (req, res) => {
         }
 
         const token = jwt.sign({ email }, secretKey, { expiresIn: 86400 });
-        res.success({ token }, 'Authentication successful');   
+        res.success({ token, user }, 'Authentication successful');   
     } catch (error) {
         res.error(500, error.message);
     }
