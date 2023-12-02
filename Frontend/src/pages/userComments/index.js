@@ -22,7 +22,6 @@ const Contact = () => {
   const fetchData = async () => {
     const dataList = await request();
     if (!error) {
-      console.log(dataList);
     }
   };
   useEffect(() => {
