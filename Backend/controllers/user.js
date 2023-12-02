@@ -66,17 +66,41 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
-exports.getAllUsers = async (req, res) => {
+exports.getUsersByFilter = async (req, res) => {
     try {
-        const users = await User.find({}, '-_id');
+        let query = {};
+        if (req.body.email) {
+            query.email = new RegExp(req.body.email, 'i'); // 模糊匹配 email
+        }
+        if (req.body.fullName) {
+            query.fullName = new RegExp(req.body.fullName, 'i'); // 模糊匹配 fullName
+        }
+        if (req.body.gender !== undefined && req.body.gender !== null && req.body.gender !== '') {
+            query.gender = req.body.gender;
+        }
+        if (req.body.country !== undefined && req.body.country !== null && req.body.country !== '') {
+            query.country = req.body.country;
+        }
+        if (req.body.userType !== undefined && req.body.userType !== null && req.body.userType !== '') {
+            query.userType = req.body.userType;
+        }
+        if (req.body.minAge) {
+            query.age = { $gte: req.body.minAge };
+        }
+        if (req.body.maxAge) {
+            query.age = query.age ? { ...query.age, $lte: req.body.maxAge } : { $lte: req.body.maxAge };
+        }
+
+        const users = await User.find(query, '-_id');
         if (!users || users.length === 0) {
             return res.error(404, 'No users found');
         }
         console.log(users);
-        res.success({ users }, 'Users retrieved successfully');
+        res.success({ users, total: users.length }, 'Users retrieved successfully');
     } catch (error) {
         res.error(500, 'Internal server error');
     }
 };
+
 
 module.exports = exports;

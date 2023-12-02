@@ -18,7 +18,7 @@ exports.logIn = async (req, res) => {
         }
 
         const token = jwt.sign({ email }, secretKey, { expiresIn: 86400 });
-        res.success({ token }, 'Authentication successful');   
+        res.success({ token, user }, 'Authentication successful');   
     } catch (error) {
         res.error(500, error.message);
     }
