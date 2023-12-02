@@ -9,7 +9,7 @@ import Login from './pages/login';
 import UserManagement from './pages/userManagement';
 import UserComments from './pages/userComments';
 import Detail from "./pages/detail";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <BrowserRouter>
