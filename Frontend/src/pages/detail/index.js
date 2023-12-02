@@ -51,7 +51,20 @@ const Detail = () => {
         };
         fetchData();
     }, []);
-    //showdata
+    useEffect(()=>{
+        if (startIndex===0){
+            setPrevdisable(true);
+        }
+        else{
+            setPrevdisable(false);
+        }
+        if (startIndex+4>=commentNum){
+            setNextdisable(true);
+        }
+        else{
+            setNextdisable(false);
+        }
+    },[startIndex,commentNum])
     useEffect(()=>{
         if (AttractionData) {
             console.log(AttractionData); // 这里将在 AttractionData 更新后执行
@@ -181,6 +194,32 @@ const Detail = () => {
                     <span className="detail_comment_rate_star">☆</span>
                 )
             }
+        }
+        return divs;
+    }
+    const generateSwitchPage=()=>{
+        const divs=[];
+        const totalpage=Math.ceil(commentNum/4);
+        for (let i=0;i<totalpage;i++){
+            divs.push(
+                <li className={`page-item ${startIndex >=i*4 && startIndex<= i*4+3? 'current' : ''}`}>
+                    <a
+                        className="page-link"
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+
+                            function handlePagnitionClick(i) {
+                                SetstartIndex(i*4);
+                            }
+
+                            handlePagnitionClick(i);
+                        }}
+                    >
+                        {i}
+                    </a>
+                </li>
+            )
         }
         return divs;
     }
@@ -344,6 +383,47 @@ const Detail = () => {
                     </div>
                     <div className="detail_comment_head">Comments</div>
                     {generateComment()}
+                    <div className="detail_pagination_container">
+                        <nav aria-label="Page navigation example">
+                            <ul className="pagination justify-content-center">
+                                <li className={`page-item ${Predisable ? 'disabled' : ''}`}>
+                                    <a
+                                        className="page-link"
+                                        href="#"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+
+                                            function handlePagnitionClick(startIndex) {
+                                                SetstartIndex(startIndex-4);
+                                            }
+
+                                            handlePagnitionClick(startIndex);
+                                        }}
+                                    >
+                                        Previous
+                                    </a>
+                                </li>
+                                {generateSwitchPage()}
+                                <li className={`page-item ${Nextdisable ? 'disabled' : ''}`}>
+                                    <a
+                                        className="page-link"
+                                        href="#"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+
+                                            function handlePagnitionClick(startIndex) {
+                                                SetstartIndex(startIndex+4);
+                                            }
+
+                                            handlePagnitionClick(startIndex);
+                                        }}
+                                    >
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
