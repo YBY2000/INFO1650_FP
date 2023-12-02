@@ -10,6 +10,7 @@ import UserManagement from './pages/userManagement';
 import UserComments from './pages/userComments';
 import Detail from "./pages/detail";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 function App() {
   return (
     <BrowserRouter>
