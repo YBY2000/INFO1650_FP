@@ -4,7 +4,7 @@ const useRequest = (url, options = {}) => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const request = async (body = null) => {
+    const request = async (body = null, params) => {
         setIsLoading(true);
         setError(null);
 
@@ -13,9 +13,13 @@ const useRequest = (url, options = {}) => {
         };
 
         const defaultUrl = 'http://localhost:3000/api';
-
+        let paramsStr = '?'
+        for( let i in params) {
+            paramsStr += `${i}=${params[i]}`
+        }
+        const paramsUrl = paramsStr.length > 1 ? url + paramsStr : url
         try {
-            const response = await fetch(defaultUrl + url, {
+            const response = await fetch(defaultUrl + paramsUrl, {
                 ...options,
                 headers: { ...defaultHeaders, ...options.headers },
                 body: body ? JSON.stringify(body) : null,
