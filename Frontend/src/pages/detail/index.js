@@ -12,14 +12,17 @@ const style = {
 
 
 const Detail = () => {
+    const [token,Settoken]=useState(null);
     //获取attraction id
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
-
     const { request: requestComments, isLoading: isLoadingComments, error: errorComments } = useRequest(`/comment?attraction_id=${id}`, { method: 'GET' });
     const { request: requestAttraction, isLoading: isLoadingAttraction, error: errorAttraction } = useRequest(`/attraction?id=${id}`, { method: 'GET' });
-
+    const { request: postComments, isLoadingLisLoadingPost, error: errorPost}=useRequest('/comment/add',{method:'POST',headers: {'Authorization': `Bearer ${token}`}});
+    const [SelectedStar,SetSelectedStar]=useState(1);
+    const [CommentTitle,SetCommentTitle]=useState('');
+    const [CommentBody,SetCommentBody]=useState('');
     const [Loading,setLoading]=useState(true);
     const [AttractionData, setAttractionData] = useState(null);
     const [CommentData,SetCommentData]=useState(null);
@@ -27,28 +30,32 @@ const Detail = () => {
     const [startIndex,SetstartIndex]=useState(0);
     const [Predisable,setPrevdisable]=useState(true);
     const [Nextdisable,setNextdisable]=useState(true);
+
     setTimeout(()=> {
         setLoading(false);
     }, 2000);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const attrData = await requestAttraction();
-            const commentData=await requestComments();
-            if (!errorComments && !errorAttraction) {
-                setAttractionData(attrData.data.attraction);
-                SetCommentData(commentData.data.comments);
-                SetcommentNum(commentData.data.comments.length);
-                SetstartIndex(0);
-                setPrevdisable(true);
-                if (commentData.data.comments.length<=4){
-                    setNextdisable(true);
-                }
-                else{
-                    setNextdisable(false);
-                }
+    const fetchData = async () => {
+        const attrData = await requestAttraction();
+        const commentData=await requestComments();
+        if (!errorComments && !errorAttraction) {
+            setAttractionData(attrData.data.attraction);
+            SetCommentData(commentData.data.comments.filter(comment=>comment.status===1));
+            SetcommentNum(commentData.data.comments.filter(comment=>comment.status===1).length);
+            SetstartIndex(0);
+            setPrevdisable(true);
+            if (commentData.data.comments.length<=4){
+                setNextdisable(true);
             }
-        };
+            else{
+                setNextdisable(false);
+            }
+        }
+    };
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            Settoken(token);
+        }
         fetchData();
     }, []);
     useEffect(()=>{
@@ -216,7 +223,7 @@ const Detail = () => {
                             handlePagnitionClick(i);
                         }}
                     >
-                        {i}
+                        {i+1}
                     </a>
                 </li>
             )
@@ -262,8 +269,38 @@ const Detail = () => {
         return divs
     }
 
-
-
+    const generateSubmitStar=()=>{
+        const handleMouseEnter=(e)=>{
+            let i =parseInt(e.target.getAttribute('data-value'))
+            SetSelectedStar(i);
+        }
+        const divs=[];
+        for (let i=1;i<=5;i++){
+            divs.push(
+                i<=SelectedStar?(<span data-value={i.toString()} className="active" onMouseEnter={handleMouseEnter}>★</span>):(
+                    <span data-value={i.toString() } onMouseEnter={handleMouseEnter}>☆</span>
+                )
+            )
+        }
+        return divs;
+    }
+    const handleSubmit=async ()=>{
+        const data = {
+            attraction_id: id.toString(),
+            review_title: CommentTitle,
+            star_rating: SelectedStar.toString(),
+            detailed_review: CommentBody
+        }
+        try {
+            const response = await postComments(data);
+            console.log('Response:', response);
+            await fetchData();
+            // 处理响应数据
+        } catch (err) {
+            console.error('Error:', err);
+            // 处理错误
+        }
+    }
 
     return (
         <div className="detail_body">
@@ -376,7 +413,7 @@ const Detail = () => {
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" className="btn btn-primary" data-bs-dismiss="modal" >Confirm</button>
+                                    <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleSubmit}>Confirm</button>
                                 </div>
                             </div>
                         </div>
@@ -423,6 +460,39 @@ const Detail = () => {
                                 </li>
                             </ul>
                         </nav>
+                    </div>
+                    <div className="detail_comment_input">
+                        <div className="detail_comment_input_text_container">
+                            <textarea style={{resize:"none"}} className="detail_comment_textarea_title" name="comment_input"  onChange={(e)=>{
+                                SetCommentTitle(e.target.value)
+                            }}
+                              placeholder="Comment Title">
+                            </textarea>
+                            <textarea style={{resize:"none"}} className="detail_comment_textarea" name="comment_input"  onChange={(e)=>{
+                                SetCommentBody(e.target.value)
+                            }}
+                                      placeholder="Leave your comments here">
+                            </textarea>
+                        </div>
+                        <div className="detail_comment_input_rate_button_container">
+                            <div className="detail_input_start_container">
+                                {generateSubmitStar()}
+                            </div>
+                            <button
+                                type="button"
+                                className="detail_comment_submit btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                style={{ textAlign: 'center', padding: 0 }}
+                            >
+                                Submit
+                            </button>
+                        </div>
+                        {!token && (
+                            <div className="cover">
+                                <a href="/login" className="login-link">Go to Login</a>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
