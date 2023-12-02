@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
 import './index.sass'; // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest';
-import { Table,Space,Input } from 'antd';
-import { AudioOutlined } from '@ant-design/icons';
+import { Table,Space,Input,Button,Select } from 'antd';
+import { AudioOutlined} from '@ant-design/icons';
 
-
+const handleChange = (value) => {
+  console.log(`selected ${value}`);
+};
 const { Search } = Input;
 const suffix = (
     <AudioOutlined
@@ -25,142 +27,161 @@ const Contact = () => {
       console.log(dataList);
     }
   };
+
+  
+
   useEffect(() => {
     fetchData();
   }, []);
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-const columns = [
+
+
+  
+  const columns = [
+      {
+          title: 'ID',
+          dataIndex: 'id',
+          defaultSortOrder: 'descend',
+          sorter: (a, b) => a.id - b.id,
+        },
     {
-        title: 'ID',
-        dataIndex: 'id',
-        defaultSortOrder: 'descend',
-        width: 100, // 设置列宽
-        sorter: (a, b) => a.id - b.id,
-      },
-  {
-    title: 'User Name',
-    dataIndex: 'name',
-    width: 300, // 设置列宽
-    filters: [
-      {
-        text: 'Joe',
-        value: 'Joe',
-      },
-      {
-        text: 'Jim',
-        value: 'Jim',
-      },
-      {
-        text: 'Submenu',
-        value: 'Submenu',
-        children: [
-          {
-            text: 'Green',
-            value: 'Green',
-          },
-          {
-            text: 'Black',
-            value: 'Black',
-          },
-        ],
-      },
-    ],
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    onFilter: (value, record) => record.name.indexOf(value) === 0,
-    sorter: (a, b) => a.name.length - b.name.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
-  },
-  {
-    title: 'Comments',
-    dataIndex: 'usercomments',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.usercomments - b.age,
-  },
-  {
-    title: 'E-mail',
-    dataIndex: 'email',
-    filters: [
-      {
-        text: 'gmail',
-        value: 'gmail',
-      },
-      {
-        text: '126',
-        value: '126',
-      },
-      {
-        text: '163',
-        value: '163',
-      },
-      {
-        text: 'Submenu',
-        value: 'Submenu',
-        children: [
-          {
-            text: 'G',
-            value: 'G',
-          },
-          {
-            text: 'B',
-            value: 'B',
-          },
-        ],
-      },
-    ],
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    onFilter: (value, record) => record.email.indexOf(value) === 0,
-    sorter: (a, b) => a.email.length - b.email.length,
-    sortDirections: ['descend'],
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    filters: [
-      {
-        text: 'London',
-        value: 'London',
-      },
-      {
-        text: 'New York',
-        value: 'New York',
-      },
-    ],
-    onFilter: (value, record) => record.address.indexOf(value) === 0,
-  },
-  {
-    title: 'Action',
-    key: 'operation',
-    fixed: 'right',
-    width: 200,
-    render: () => <div><a>Delete</a>,<a>Save</a>,<a>Edit</a></div>
-  },
-];
+      title: 'User Name',
+      dataIndex: 'name',
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      onFilter: (value, record) => record.name.indexOf(value) === 0,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend'],
+    },
+    {
+      title: 'Gender',
+      dataIndex: 'gender',
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.age - b.age,
+    },
+    {
+      title: 'Country',
+      dataIndex: 'country',
+    },
+    {
+      title: 'Comments Count',
+      dataIndex: 'usercomments',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.usercomments - b.age,
+    },
+    {
+      title: 'Creation Time',
+      dataIndex: 'creationtime',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.creationtime - b.creationtime,
+    },
+    {
+      title: 'E-mail',
+      dataIndex: 'email',
+      filters: [
+        {
+          text: 'gmail',
+          value: 'gmail',
+        },
+        {
+          text: '126',
+          value: '126',
+        },
+        {
+          text: '163',
+          value: '163',
+        },
+      ],
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      sorter: (a, b) => a.email.length - b.email.length,
+      sortDirections: ['descend'],
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+    },
+    {
+      title: 'Interests',
+      dataIndex: 'interest',
+    },
+    {
+      title: 'Action',
+      key: 'operation',
+      fixed: 'right',
+      width: 200,
+      render: () => <div><a>Edit</a>  /  <a>Delete</a></div>
+    },
+  ];
 
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
 
-return(
-<Space direction="vertical">
-<Search
-      placeholder="input search text"
-      allowClear
-      enterButton="Search"
-      size="large"
-      onSearch={onSearch}
-    />
-    <Table columns={columns} dataSource={data} onChange={onChange} scroll={{x: 1500,}}/>
-</Space>)
+  return(
+<>
+      <Space
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        <Input placeholder="Email" />
+        <Input placeholder="Full Name" />
+        <Input placeholder="MinAge" />
+        <Input placeholder="MaxAge" />
+        <Select
+          defaultValue="gender"
+          style={{
+            width: 120,
+          }}
+          onChange={handleChange}
+          options={[
+            {
+              value: 'gender',
+              label: 'Gender',
+            },
+          ]}
+        />
+        <Select
+          defaultValue="country"
+          style={{
+            width: 120,
+          }}
+          onChange={handleChange}
+          options={[
+            {
+              value: 'country',
+              label: 'Country',
+            },
+          ]}
+        />
+        <Select
+          defaultValue="usertype"
+          style={{
+            width: 120,
+          }}
+          onChange={handleChange}
+          options={[
+            {
+              value: 'usertype',
+              label: 'Usertype', //1 -- admin  0--normal user
+            },
+          ]}
+        />
+        <Button type="primary">Search</Button>
+      </Space>
+      <Table columns={columns} dataSource={data} onChange={handleChange} />
+    </>)
 }
 
 const data = [
@@ -172,6 +193,12 @@ const data = [
       usercomments:10,
       email:'zhjhk@126.com',
       address: 'New York No. 1 Lake Park',
+      creationtime:'153135',
+      gender:'1',
+      country:'CN',
+      description:'XXXXXXXXXXXXX',
+      interest:'0',
+
     },
     {
       key: '2',
@@ -181,6 +208,11 @@ const data = [
       usercomments:20,
       email:'zGreenhk@126.com',
       address: 'London No. 1 Lake Park',
+      creationtime:'153135',
+      gender:'1',
+      country:'CN',
+      description:'XXXXXXXXXXXXX',
+      interest:'0',
     },
     {
       key: '3',
@@ -190,6 +222,11 @@ const data = [
       usercomments:30,
       email:'BUk@163.com',
       address: 'Sydney No. 1 Lake Park',
+      creationtime:'153135',
+      gender:'1',
+      country:'CN',
+      description:'XXXXXXXXXXXXX',
+      interest:'0',
     },
     {
       key: '4',
@@ -199,6 +236,11 @@ const data = [
       usercomments:50,
       email:'zGreenhk@163.com',
       address: 'London No. 2 Lake Park',
+      creationtime:'153135',
+      gender:'1',
+      country:'CN',
+      description:'XXXXXXXXXXXXX',
+      interest:'0',
     },
     {
         key: '5',
@@ -208,6 +250,11 @@ const data = [
         usercomments:60,
         email:'zGreenhk@gmail.com',
         address: 'Beijing No. 2 Lake Park',
+        creationtime:'153135',
+        gender:'1',
+        country:'CN',
+        description:'XXXXXXXXXXXXX',
+        interest:'0',
       },
   ];
 
