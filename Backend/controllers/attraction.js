@@ -17,7 +17,6 @@ exports.getAttractionDetail = async (req, res) => {
         res.error(500, 'Internal server error');
     }
 }
-
 exports.getAttractionAndComments = async (req, res) => {
     try {
         const attractions = await Attraction.aggregate([
@@ -37,8 +36,8 @@ exports.getAttractionAndComments = async (req, res) => {
             },
             {
                 $group: {
-                    _id: "$_id", 
-                    id: { $first: "$id" }, 
+                    _id: "$_id",
+                    id: { $first: "$id" },
                     name: { $first: "$name" },
                     location: { $first: "$location" },
                     description: { $first: "$description" },
@@ -56,7 +55,8 @@ exports.getAttractionAndComments = async (req, res) => {
                             $cond: { if: "$comments_data", then: 1, else: 0 }
                         }
                     },
-                    latest_comment_time: { $max: "$comments_data.review_time" }
+                    latest_comment_time: { $max: "$comments_data.review_time" },
+                    comments: { $push: "$comments_data" }
                 }
             },
             {
@@ -79,7 +79,8 @@ exports.getAttractionAndComments = async (req, res) => {
                     opening_hours: 1,
                     tips: 1,
                     comments_count: 1,
-                    latest_comment_time: 1
+                    latest_comment_time: 1,
+                    comments: 1
                 }
             }
         ]);
@@ -94,5 +95,6 @@ exports.getAttractionAndComments = async (req, res) => {
         res.error(500, 'Internal server error');
     }
 };
+
 
 module.exports = exports;
