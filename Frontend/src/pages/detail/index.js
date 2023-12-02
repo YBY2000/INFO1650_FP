@@ -285,6 +285,14 @@ const Detail = () => {
         return divs;
     }
     const handleSubmit=async ()=>{
+        const token = localStorage.getItem('token');
+        if (!token){
+            alert("Please Login");
+            Settoken(null);
+            SetCommentTitle('');
+            SetCommentBody('');
+            return;
+        }
         const data = {
             attraction_id: id.toString(),
             review_title: CommentTitle,
@@ -293,10 +301,13 @@ const Detail = () => {
         }
         try {
             const response = await postComments(data);
-            console.log('Response:', response);
+            alert("Post Success!");
+            SetCommentTitle('');
+            SetCommentBody('');
             await fetchData();
             // 处理响应数据
         } catch (err) {
+            alert('Error:'+err);
             console.error('Error:', err);
             // 处理错误
         }
@@ -463,12 +474,12 @@ const Detail = () => {
                     </div>
                     <div className="detail_comment_input">
                         <div className="detail_comment_input_text_container">
-                            <textarea style={{resize:"none"}} className="detail_comment_textarea_title" name="comment_input"  onChange={(e)=>{
+                            <textarea style={{resize:"none"}} className="detail_comment_textarea_title" name="comment_input" value={CommentTitle} onChange={(e)=>{
                                 SetCommentTitle(e.target.value)
                             }}
                               placeholder="Comment Title">
                             </textarea>
-                            <textarea style={{resize:"none"}} className="detail_comment_textarea" name="comment_input"  onChange={(e)=>{
+                            <textarea style={{resize:"none"}} className="detail_comment_textarea" name="comment_input" value={CommentBody} onChange={(e)=>{
                                 SetCommentBody(e.target.value)
                             }}
                                       placeholder="Leave your comments here">
