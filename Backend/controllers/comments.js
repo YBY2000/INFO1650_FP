@@ -46,5 +46,20 @@ exports.addComment = async (req, res) => {
     }
 };
 
+exports.updateStatus = async (req, res) => {
+    try {
+        const { review_id } = req.query;
+        const comment = await Comments.findOne({ review_id });
+        if (!comment) {
+            return res.error(404, 'Comment not found');
+        }
+        comment.status = comment.status === 0 ? 1 : 0;
+        await comment.save();
+        res.success({ comment }, 'Status updated successfully');
+    } catch (error) {
+        console.log(error)
+        res.error(500, 'Internal server error');
+    }
+};
 
 module.exports = exports;
