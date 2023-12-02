@@ -1,0 +1,82 @@
+[
+    {
+        "name": "United States",
+        "id": 0
+    },
+    {
+        "name": "Canada",
+        "id": 1
+    },
+    {
+        "name": "United Kingdom",
+        "id": 2
+    },
+    {
+        "name": "Germany",
+        "id": 3
+    },
+    {
+        "name": "France",
+        "id": 4
+    },
+    {
+        "name": "Australia",
+        "id": 5
+    },
+    {
+        "name": "Japan",
+        "id": 6
+    },
+    {
+        "name": "South Korea",
+        "id": 7
+    },
+    {
+        "name": "China",
+        "id": 8
+    },
+    {
+        "name": "India",
+        "id": 9
+    },
+    {
+        "name": "Brazil",
+        "id": 10
+    },
+    {
+        "name": "Mexico",
+        "id": 11
+    },
+    {
+        "name": "Italy",
+        "id": 12
+    },
+    {
+        "name": "Spain",
+        "id": 13
+    },
+    {
+        "name": "Russia",
+        "id": 14
+    },
+    {
+        "name": "South Africa",
+        "id": 15
+    },
+    {
+        "name": "Egypt",
+        "id": 16
+    },
+    {
+        "name": "Nigeria",
+        "id": 17
+    },
+    {
+        "name": "Argentina",
+        "id": 18
+    },
+    {
+        "name": "Sweden",
+        "id": 19
+    }
+]
