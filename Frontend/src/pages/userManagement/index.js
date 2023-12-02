@@ -135,65 +135,50 @@ const Contact = () => {
           marginBottom: 16,
         }}
       >
+        <Input placeholder="Email" />
+        <Input placeholder="Full Name" />
+        <Input placeholder="MinAge" />
+        <Input placeholder="MaxAge" />
         <Select
-          defaultValue="jack"
+          defaultValue="gender"
           style={{
             width: 120,
           }}
           onChange={handleChange}
           options={[
             {
-              value: 'jack',
-              label: 'Jack',
-            },
-            {
-              value: 'lucy',
-              label: 'Lucy',
-            },
-            {
-              value: 'Yiminghe',
-              label: 'yiminghe',
-            },
-            {
-              value: 'disabled',
-              label: 'Disabled',
-              disabled: true,
+              value: 'gender',
+              label: 'Gender',
             },
           ]}
         />
         <Select
-          defaultValue="lucy"
+          defaultValue="country"
           style={{
             width: 120,
           }}
           onChange={handleChange}
           options={[
             {
-              value: 'jack',
-              label: 'Jack',
-            },
-            {
-              value: 'lucy',
-              label: 'Lucy',
-            },
-            {
-              value: 'Yiminghe',
-              label: 'yiminghe',
-            },
-            {
-              value: 'disabled',
-              label: 'Disabled',
-              disabled: true,
+              value: 'country',
+              label: 'Country',
             },
           ]}
         />
-        <Search
-      placeholder="input search text"
-      allowClear
-      enterButton="Search"
-      size="large"
-      onSearch={onSearch}
-    />
+        <Select
+          defaultValue="usertype"
+          style={{
+            width: 120,
+          }}
+          onChange={handleChange}
+          options={[
+            {
+              value: 'usertype',
+              label: 'Usertype', //1 -- admin  0--normal user
+            },
+          ]}
+        />
+        <Button type="primary">Search</Button>
       </Space>
       <Table columns={columns} dataSource={data} onChange={handleChange} />
     </>)

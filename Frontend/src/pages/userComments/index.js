@@ -59,9 +59,7 @@ const Contact = () => {
         key: 'operation',
         render: () => (
           <Space size="middle">
-            <a>Pause</a>
-            <a>Stop</a>
-            <a>Delete</a>
+            <a>Switch</a>
           </Space>
         ),
       },
