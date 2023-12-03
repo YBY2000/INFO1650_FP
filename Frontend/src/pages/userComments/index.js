@@ -64,6 +64,7 @@ const Contact = () => {
         title: 'Comment_ID',
         dataIndex: 'review_id',
         key: 'review_id',
+        render: (text, record, index) => <span>{index+1}</span>,
       },
       {
         title: 'Content',
