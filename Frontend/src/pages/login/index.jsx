@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './index.scss';
 import { useNavigate } from 'react-router-dom';
+import {jwtDecode} from 'jwt-decode';
 import useRequest from '../../hooks/useRequest';
 
 const LoginPage = () => {
@@ -56,6 +57,26 @@ const LoginPage = () => {
     }
   };
 
+  // const handleSignIn = () => {
+  //   navigate('/signin'); // 假设 '/signin' 是注册页面的路由
+  // };
+
+  // 检查 token 是否过期
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        const decodedToken = jwtDecode(storedToken);
+        if (decodedToken.exp * 1000 < Date.now()) {
+          localStorage.removeItem('token');
+          navigate('/login'); // 重定向到登录页
+        }
+      }
+    }, 60000); // 每分钟检查一次
+
+    return () => clearInterval(interval);
+  }, [navigate]);
+
   return (
     <>
       <div id="liveAlertPlaceholder"></div>
@@ -98,7 +119,14 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            <div id="submitButton">
             <button type="submit" className="btn btn-primary">Log in</button>
+            </div>
+
+            <div id="submitButton">
+            <a href="/signin" style={{ color: 'blue', textDecoration: 'none' }}>sign up</a>
+
+            </div>
           </form>
         </div>
         <img src="../../../business-meeting.png" alt="Business Meeting" />
