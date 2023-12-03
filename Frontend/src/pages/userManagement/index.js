@@ -85,7 +85,6 @@ const Contact = () => {
       width: 200,
       render: (txt, row) => (
         <div>
-          <a>Edit</a> /
           <a
             onClick={() => {
               deleteRow(row)
