@@ -9,21 +9,22 @@ import Login from './pages/login';
 import UserManagement from './pages/userManagement';
 import UserComments from './pages/userComments';
 import Homepage from './pages/homepage/homepage.page';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Homepage />} />
+          <Route path="/homepage" element={<Homepage />} />
           <Route path="/about" element={<About />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/contact" element={<Example />} />
           <Route path="/login" element={<Login />} />
           <Route path="/users" element={<UserManagement />} />
           <Route path="/comments" element={<UserComments />} />
-          <Route path="/homepage" element={<Homepage />} />
+          {/* <Route path="/home" element={<Home />} /> */}
         </Routes>
       </Layout>
     </BrowserRouter>

@@ -1,13 +1,15 @@
 // Layout.js
 
-import React from 'react';
+import React, { Component } from 'react';
 import './layout.css'; // Import the CSS file for styling
-import { Link } from 'react-router-dom';
+
 
 const Layout = ({ children }) => {
   return (
     <div className="wrapper">
-      <header className="navbar">
+      <header>
+      </header>
+      {/* <header className="navbar">
         <ul className="nav-list">
           <li className="nav-item">
             <Link to="/" className="nav-link">
@@ -20,22 +22,17 @@ const Layout = ({ children }) => {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/jobs" className="nav-link">
-              Jobs
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/homepage" className="nav-link">
+            <Link to="/" className="nav-link">
               Example
             </Link>
           </li>
         </ul>
-      </header>
+      </header> */}
       <main className="content-container">{children}</main>
       <footer className="footer">
-        &copy; {new Date().getFullYear()} Your Company Name
+        Final Project &copy; {new Date().getFullYear()} INFO 6150 group 5
       </footer>
-    </div>
+    </div >
   );
 };
 
