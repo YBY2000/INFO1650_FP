@@ -3,34 +3,6 @@ import './index.sass' // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest'
 import { Table, Space, Badge, message } from 'antd'
 
-const mockData =  [{
-  id: 2,
-  name: 'City',
-  comments_count: '30',
-  latest_comment_time: '10.3.4.5654',
-  official_tel: 'zGreenhk@163.com',
-  details: [
-    {
-      review_id: 0,
-      review_time: '2014-12-24 23:12:00',
-      detailed_review: 'This is production 1',
-      status: 1,
-    },
-    {
-      review_id: 1,
-      review_time: '2014-12-24 23:12:00',
-      detailed_review: 'This is production 2',
-      status: 0,
-    },
-    {
-      review_id: 2,
-      review_time: '2014-12-24 23:12:00',
-      detailed_review: 'This is production 3',
-      status: 0,
-    },
-  ],
-}]
-
 const Contact = () => {
   const [data, setData] = useState()
   const { request, isLoading, error } = useRequest('/attraction/getListInfo', {
@@ -106,6 +78,7 @@ const Contact = () => {
       {
         title: 'Status',
         key: 'status',
+        width:100,
         render: (row) =>
           !Number(row.status) ? (
             <Badge status='error' text='disable' />
@@ -137,14 +110,14 @@ const Contact = () => {
       <Table
         rowKey='review_id'
         columns={columns}
-        dataSource={e.details}
+        dataSource={e.comments}
         pagination={false}
       />
     )
   }
 
   return (
-    <>
+    <div style={{padding: '20px 50px'}} className='comments-container'>
       <Table
         rowKey='id'
         loading={isLoading}
@@ -154,7 +127,7 @@ const Contact = () => {
         }}
         dataSource={data}
       />
-    </>
+    </div>
   )
 }
 

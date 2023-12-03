@@ -8,7 +8,7 @@ const Contact = () => {
   const [data, setData] = useState()
   const [emailFilter, setEmailFilter] = useState()
   const [queryParams, setQueryParams] = useState()
-  
+
   const { request, isLoading, error } = useRequest('/user', {
     method: 'POST',
   })
@@ -99,7 +99,7 @@ const Contact = () => {
   ]
 
   const fetchData = async () => {
-    const res = await request(queryParams)
+    const res = await request(queryParams || {})
     if (!error) {
       setData(res.data.users)
       const emailfilter = res.data.users.map((u) => {
@@ -130,16 +130,20 @@ const Contact = () => {
     }
   }, [queryParams])
 
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (
     <>
       <Space
         style={{
-          margin: '16px 0',
+          margin: '20px 50px',
         }}
       >
         <Form form={form} layout='inline'>
           <Row>
-            <Form.Item label='Email' name='Email'>
+            <Form.Item label='Email' name='email'>
               <Input placeholder='Email' />
             </Form.Item>
             <Form.Item label='Full Name' name='fullName'>
@@ -268,10 +272,10 @@ const Contact = () => {
                 ]}
               />
             </Form.Item>
-            <Button type='primary' onClick={search}>
-              Search
-            </Button>
           </Row>
+          <Button style={{width: '120px'}} type='primary' onClick={search}>
+            Search
+          </Button>
         </Form>
       </Space>
       <Table
