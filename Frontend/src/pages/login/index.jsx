@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './index.scss';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import useRequest from '../../hooks/useRequest';
 
 const LoginPage = () => {
@@ -120,11 +120,11 @@ const LoginPage = () => {
               />
             </div>
             <div id="submitButton">
-            <button type="submit" className="btn btn-primary">Log in</button>
+              <button type="submit" className="btn btn-primary">Log in</button>
             </div>
 
             <div id="submitButton">
-            <a href="/signin" style={{ color: 'blue', textDecoration: 'none' }}>sign up</a>
+              <a href="/signup" style={{ color: 'blue', textDecoration: 'none' }}>sign up</a>
 
             </div>
           </form>

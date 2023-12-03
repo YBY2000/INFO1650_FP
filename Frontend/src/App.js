@@ -8,6 +8,7 @@ import Layout from './components/layout';
 import Login from './pages/login';
 import UserManagement from './pages/userManagement';
 import UserComments from './pages/userComments';
+import SignUp from './pages/signUp';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/users" element={<UserManagement />} />
           <Route path="/comments" element={<UserComments />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </Layout>
     </BrowserRouter>
