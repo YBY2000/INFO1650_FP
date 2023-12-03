@@ -7,7 +7,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { request } = useRequest('/auth/login', { method: 'POST' });
+  // const { request } = useRequest('/api/auth/login', { method: 'POST' }); // 更新请求 URL
   const formRef = useRef(null); // 创建一个 ref 来引用表单
 
   const handleLogin = async (e) => {
@@ -26,19 +26,33 @@ const LoginPage = () => {
       return;
     }
 
-    // 提交请求
+    // 准备请求体
     const requestBody = { email, password };
+
     try {
-      const data = await request(requestBody);
+      // 发送 POST 请求到 API
+      // 如果使用 axios，替换下一行为：
+      // const response = await axios.post('http://localhost:3000/api/auth/login', requestBody);
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const data = await response.json();
+
       if (data.success) {
         alert('Login successful!');
         localStorage.setItem('token', data.data.token);
         navigate('/home');
       } else {
-        alert(data.message);
+        alert(data.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('An error occurred while logging in');
     }
   };
 
