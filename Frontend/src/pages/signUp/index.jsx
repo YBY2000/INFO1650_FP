@@ -8,6 +8,7 @@ import {
     Radio,
     Select,
     Upload,
+    message
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
@@ -28,11 +29,11 @@ const RegistrationPage = () => {
         password: '',
         firstName: '',
         lastName: '',
-        gender: 1,
+        gender: null,
         country: '',
         description: '',
         avatar: '',
-        age: 25,
+        age: 0,
         interest: [],
     });
     const [countries, setCountries] = useState([]);
@@ -64,6 +65,13 @@ const RegistrationPage = () => {
 
         fetchCountries();
     }, []);
+    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const validatePassword = (password) => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password);
+    const validateName = (name) => /^[a-zA-Z ]{1,50}$/.test(name);
+
+    const validateDescription = (description) => /^[a-zA-Z ]{1,200}$/.test(description);
+    const validateAge = (age) => age >= 15 && age <= 99;
+    const validateInterests = (interests) => interests.every(i => i >= 0 && i <= 4);
 
 
     const onInterestChange = (checkedValues) => {
@@ -85,6 +93,44 @@ const RegistrationPage = () => {
     // ...其他函数，例如 handleInputChange, handlePreview, handleChange...
 
     const handleSubmit = async () => {
+        if (!validateEmail(formData.email)) {
+            message.error('Invalid email address');
+            return;
+          }
+          if (!validatePassword(formData.password)) {
+            message.error('The password is too weak. The password contains at least one digit, one lowercase letter, and one uppercase letter, and must contain at least eight characters');
+            return;
+          }
+          if (!validateName(formData.firstName)) {
+            message.error('Invalid first name');
+            return;
+          }
+          if (!validateName(formData.lastName)) {
+            message.error('Invalid last name');
+            return;
+          }
+          if (!formData.gender) {
+            message.error('Please select a gender');
+            return;
+          }
+
+          if (!formData.country) {
+            message.error('Please select a country');
+            return;
+          }
+          
+          if (!formData.description || !validateDescription(formData.description)) {
+            message.error('Invalid description, description should be 1 to 200 letters');
+            return;
+          }
+          if (!validateAge(formData.age)) {
+            message.error('Must be between 15 and 99 years old');
+            return;
+          }
+          if (!validateInterests(formData.interest)) {
+            message.error('The selected interest is invalid');
+            return;
+          }
         try {
             const response = await fetch('http://localhost:3000/api/user/create', {
                 method: 'POST',
@@ -102,7 +148,7 @@ const RegistrationPage = () => {
             console.log(data);
             // 处理响应
         } catch (error) {
-            console.error('提交表单时出错', error);
+            console.error('error in submitting form', error);
             // 错误处理
         }
     };
