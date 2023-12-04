@@ -58,7 +58,7 @@ const LoginPage = () => {
   };
 
   // const handleSignIn = () => {
-  //   navigate('/signin'); // 假设 '/signin' 是注册页面的路由
+  //   navigate('/signup'); // 假设 '/signin' 是注册页面的路由
   // };
 
   // 检查 token 是否过期
@@ -82,9 +82,7 @@ const LoginPage = () => {
       <div id="liveAlertPlaceholder"></div>
 
       <div id="backButtonContainer" className="backButtonContainer">
-        <button type="button" className="btn btn-secondary" onClick={() => navigate(-1)}>
-          Back
-        </button>
+
       </div>
 
       <div className="loginContainer">
@@ -123,9 +121,9 @@ const LoginPage = () => {
               <button type="submit" className="btn btn-primary">Log in</button>
             </div>
 
-            <div id="submitButton">
-              <a href="/signup" style={{ color: 'blue', textDecoration: 'none' }}>sign up</a>
-
+            <div id="signUpButton">
+              {/* Replace the anchor tag with a button */}
+              <button className="btn btn-white" onClick={() => navigate('/signup')}>Sign Up</button>
             </div>
           </form>
         </div>
