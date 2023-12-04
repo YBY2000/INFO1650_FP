@@ -1,32 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Modal, Upload } from 'antd';
+import {
+    Button,
+    Checkbox,
+    Form,
+    Input,
+    Radio,
+    Select,
+    Upload,
+} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-// 获取文件的 Base64 编码
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+const { TextArea } = Input;
 
-const interests = [
-    { id: 0, name: 'city views' },
-    { id: 1, name: 'natural views' },
-    { id: 2, name: 'historical sites' },
-    { id: 3, name: 'Cultural scenes' },
-    { id: 4, name: 'Adventure and sports' },
-];
+const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
 
 const RegistrationPage = () => {
+    const [form] = Form.useForm();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
         firstName: '',
         lastName: '',
-        gender: 1, // 默认为男性
+        gender: 1,
         country: '',
         description: '',
         avatar: '',
@@ -34,120 +36,70 @@ const RegistrationPage = () => {
         interest: [],
     });
     const [countries, setCountries] = useState([]);
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
+    const [fileList, setFileList] = useState([]);
+
+    const interestsOptions = [
+        { label: 'city views', value: 0 },
+        { label: 'natural views', value: 1 },
+        { label: 'historical sites', value: 2 },
+        { label: 'Cultural scenes', value: 3 },
+        { label: 'Adventure and sports', value: 4 },
+    ];
 
     useEffect(() => {
         const fetchCountries = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/country');
-                if (response.data.success) {
-                    setCountries(response.data.data.countries);
+                const response = await fetch('http://localhost:3000/api/country');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                if (data.success) {
+                    setCountries(data.data.countries);
                 }
             } catch (error) {
                 console.error('获取国家列表失败', error);
-                // 可以在此处处理错误，如设置错误消息状态
             }
         };
 
         fetchCountries();
     }, []);
 
-    // 输入变化处理
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+
+    const onInterestChange = (checkedValues) => {
+        setFormData({ ...formData, interest: checkedValues });
     };
 
-    // 兴趣选择处理
-    const handleInterestChange = (e) => {
-        const value = parseInt(e.target.value);
-        const newInterests = formData.interest.includes(value)
-            ? formData.interest.filter(i => i !== value)
-            : [...formData.interest, value];
-        setFormData(prev => ({
-            ...prev,
-            interest: newInterests
-        }));
-    };
-
-    const handlePreview = async (file) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
-        setPreviewImage(file.url || file.preview);
-        setPreviewOpen(true);
-    };
-
-    const handleChange = async ({ file }) => {
+    const handleUploadChange = async ({ file, fileList: newFileList }) => {
+        setFileList(newFileList);
         if (file.status === 'done') {
-            const base64 = await getBase64(file.originFileObj);
-            setFormData({ ...formData, avatar: base64 });
+            try {
+                const base64 = await getBase64(file.originFileObj);
+                setFormData({ ...formData, avatar: base64 });
+            } catch (error) {
+                console.error('Error reading file:', error);
+            }
         }
     };
 
-    const handleCancel = () => setPreviewOpen(false);
+    // ...其他函数，例如 handleInputChange, handlePreview, handleChange...
 
-    const uploadButton = (
-        <div>
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </div>
-    );
-
-
-    // 验证逻辑
-    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const validatePassword = (password) => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password);
-    const validateFirstName = (firstName) => /^[a-zA-Z ]{1,50}$/.test(firstName);
-    const validateLastName = (lastName) => /^[a-zA-Z ]{1,50}$/.test(lastName);
-    const validateDescription = (description) => /^[a-zA-Z ]{1,200}$/.test(description);
-    const validateAge = (age) => age >= 15 && age <= 99;
-    const validateInterests = (interests) => interests.every(i => i >= 0 && i <= 4);
-
-    // 表单提交处理
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!validateEmail(formData.email)) {
-            alert('Invalid email address');
-            return;
-        }
-        if (!validatePassword(formData.password)) {
-            alert('The password is too weak. The password contains at least one digit, one lowercase letter, and one uppercase letter, and must contain at least eight characters');
-            return;
-        }
-        if (!validateFirstName(formData.firstName)) {
-            alert('Invalid first name');
-            return;
-        }
-        if (!validateLastName(formData.lastName)) {
-            alert('Invalid last name');
-            return;
-        }
-        if (formData.country === '') {
-            alert('Please select a country');
-            return;
-        }
-        if (!validateDescription(formData.description)) {
-            alert('Description format is invalid; Must be 1-200 letters');
-            return;
-        }
-        if (!validateAge(formData.age)) {
-            alert('Must be between 15 and 99 years old');
-            return;
-        }
-        if (!validateInterests(formData.interest)) {
-            alert('Invalid interest selection');
-            return;
-        }
-
+    const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/api/user/create', formData);
-            console.log(response.data);
+            const response = await fetch('http://localhost:3000/api/user/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
             // 处理响应
         } catch (error) {
             console.error('提交表单时出错', error);
@@ -155,58 +107,68 @@ const RegistrationPage = () => {
         }
     };
 
-    // 渲染表单
+
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="邮箱" />
-            <input type="password" name="password" value={formData.password} onChange={handleInputChange} placeholder="密码" />
-            <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} placeholder="名字" />
-            <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} placeholder="姓氏" />
-
-            <div>
-                <input type="radio" name="gender" value="0" checked={formData.gender === 0} onChange={handleInputChange} /> Female
-                <input type="radio" name="gender" value="1" checked={formData.gender === 1} onChange={handleInputChange} /> Male
-            </div>
-
-            <select name="country" value={formData.country} onChange={handleInputChange}>
-                <option value="">Please select a country</option>
-                {countries.map(country => (
-                    <option key={country.id} value={country.id}>{country.name}</option>
-                ))}
-            </select>
-
-            <textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="描述"></textarea>
-            <Upload
-                listType="picture-card"
-                showUploadList={false}
-                beforeUpload={() => false}
-                onPreview={handlePreview}
-                onChange={handleChange}
-            >
-                {formData.avatar ? <img src={formData.avatar} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-            </Upload>
-            <Modal open={previewOpen} footer={null} onCancel={handleCancel}>
-                <img alt="preview" style={{ width: '100%' }} src={previewImage} />
-            </Modal>
-            <input type="number" name="age" value={formData.age} onChange={handleInputChange} min="15" max="99" />
-
-            <div>
-                {interests.map(interest => (
-                    <label key={interest.id}>
-                        <input
-                            type="checkbox"
-                            name="interest"
-                            value={interest.id}
-                            checked={formData.interest.includes(interest.id)}
-                            onChange={handleInterestChange}
-                        />
-                        {interest.name}
-                    </label>
-                ))}
-            </div>
-
-            <button type="submit">Sign Up</button>
-        </form>
+        <Form
+            form={form}
+            layout="horizontal"
+            onFinish={handleSubmit}
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span: 14 }}
+            style={{ maxWidth: 600 }}
+        >
+            <Form.Item label="Email" name="email">
+                <Input onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Password" name="password">
+                <Input.Password onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+            </Form.Item>
+            {/* ...其他表单元素... */}
+            <Form.Item label="First Name" name="firstName">
+                <Input onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Last Name" name="lastName">
+                <Input onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Gender" name="gender">
+                <Radio.Group onChange={(e) => setFormData({ ...formData, gender: e.target.value })}>
+                    <Radio value={0}>Female</Radio>
+                    <Radio value={1}>Male</Radio>
+                </Radio.Group>
+            </Form.Item>
+            <Form.Item label="Country" name="country">
+                <Select onChange={(value) => setFormData({ ...formData, country: value })}>
+                    {countries.map(country => (
+                        <Select.Option key={country.id} value={country.id}>{country.name}</Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
+            {/* ...其他表单元素... */}
+            <Form.Item label="Description" name="description">
+                <TextArea rows={4} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Avatar" name="avatar">
+                <Upload
+                    listType="picture-card"
+                    fileList={fileList}
+                    onChange={handleUploadChange}
+                    beforeUpload={() => false}
+                >
+                    {fileList.length < 1 && <PlusOutlined />}
+                </Upload>
+            </Form.Item>
+            <Form.Item label="Age" name="age">
+                <Input type="number" onChange={(e) => setFormData({ ...formData, age: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Interests" name="interest">
+                <Checkbox.Group options={interestsOptions} onChange={onInterestChange} />
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 4 }}>
+                <Button type="primary" htmlType="submit">
+                    Register
+                </Button>
+            </Form.Item>
+        </Form>
     );
 };
 
