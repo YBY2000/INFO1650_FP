@@ -1,199 +1,143 @@
-import React, { useEffect } from 'react';
-import './index.sass'; // Import the CSS file for styling
-import useRequest from '../../hooks/useRequest';
-import { Table,Space,Input,Badge } from 'antd';
-import { AudioOutlined } from '@ant-design/icons';
 
+import React, { useEffect, useState } from 'react'
+import './index.sass' // Import the CSS file for styling
+import useRequest from '../../hooks/useRequest'
+import { Table, Space, Badge, message } from 'antd'
 
-const items = [
-  {
-    key: '1',
-    label: 'Action 1',
-  },
-  {
-    key: '2',
-    label: 'Action 2',
-  },
-];
 
 const Contact = () => {
-  const { request, isLoading, error } = useRequest('/user/getAll', { method: 'GET' });
-  //get/POst
-  const fetchData = async () => {
-    const dataList = await request();
-    if (!error) {
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const [data, setData] = useState()
+  const { request, isLoading, error } = useRequest('/attraction/getListInfo', {
+    method: 'GET',
+  })
+  const { request: switchStatus } = useRequest('/comment/updateStatus', {
+    method: 'GET',
+  })
 
-  const expandedRowRender = () => {
-    const columns = [
-      {
-        title: 'Comment_ID',
-        dataIndex: 'commentID',
-        key: 'commentID',
-      },
-      {
-        title: 'Content',
-        dataIndex: 'content',
-        key: 'content',
-      },
-      {
-        title: 'Post Data',
-        dataIndex: 'postDate',
-        key: 'postDate',
-      },
-      {
-        title: 'Status',
-        key: 'state',
-        render: () => <Badge status="success" text="enable" />,
-      },
-      {
-        title: 'Action',
-        dataIndex: 'operation',
-        key: 'operation',
-        render: () => (
-          <Space size="middle">
-            <a>Switch</a>
-          </Space>
-        ),
-      },
-    ];
-    const data = [];
-    for (let i = 0; i < 3; ++i) {
-      data.push({
-        key: i.toString(),
-        postDate: '2014-12-24 23:12:00',
-        content: 'This is production name',
-        commentID: 'Upgraded: 56',
-      });
+  const fetchData = async () => {
+    const res = await request()
+    if (!error) {
+
+      setData(res.data.attractions)
+
     }
-    return <Table columns={columns} dataSource={data} pagination={false} />;
-  };
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+
   const columns = [
     {
       title: 'Attraction ID',
-      dataIndex: 'attractionID',
-      key: 'attractionID',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
       title: 'Attraction Name',
-      dataIndex: 'attractionName',
-      key: 'attractionName',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: 'Commentscount',
-      dataIndex: 'commentsCount',
-      key: 'commentsCount',
+      title: 'Comments Count',
+      dataIndex: 'comments_count',
+      key: 'comments_count',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => a.commentsCount - b.commentsCount,
+      sorter: (a, b) => a.comments_count - b.comments_count,
     },
     {
       title: 'Latest Comment creation time:',
-      dataIndex: 'latestCommentCreationTime',
-      key: 'latestCommentCreationTime',
+      dataIndex: 'latest_comment_time',
+      key: 'latest_comment_time',
     },
     {
-      title: 'User Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: 'Official Tel',
+      dataIndex: 'official_tel',
+      key: 'official_tel',
     },
     // {
     //   title: 'Action',
     //   key: 'operation',
     //   render: () => <a>Publish</a>,
     // },
-  ];
-  const data = [];
-  for (let i = 0; i < 3; ++i) {
-    data.push({
-      key: i.toString(),
-      attractionID: '0028555230',
-      attractionName: 'The Forbidden City',
-      commentsCount: '60',
-      latestCommentCreationTime: '10.3.4.5654',
-      email:'zGreenhk@163.com',
-    });
-  }
-  for (let i = 3; i < 6; ++i) {
-    data.push({
-      key: i.toString(),
-      attractionID: '0028555230',
-      attractionName: 'The Forbidden City',
-      commentsCount: '20',
-      latestCommentCreationTime: '10.3.4.5654',
-      email:'zGreenhk@163.com',
-    });
-  }
-  return (
-    <>
+  ]
+
+  const expandedRowRender = (e) => {
+    const columns = [
+      {
+        title: 'Comment_ID',
+        dataIndex: 'review_id',
+        key: 'review_id',
+        render: (text, record, index) => <span>{index+1}</span>,
+      },
+      {
+        title: 'Content',
+        dataIndex: 'detailed_review',
+        key: 'detailed_review',
+      },
+      {
+        title: 'Post Data',
+        dataIndex: 'review_time',
+        key: 'review_time',
+      },
+      {
+        title: 'Status',
+        key: 'status',
+        width:100,
+        render: (row) =>
+          !Number(row.status) ? (
+            <Badge status='error' text='disable' />
+          ) : (
+            <Badge status='success' text='enable' />
+          ),
+
+      },
+      {
+        title: 'Action',
+        dataIndex: 'operation',
+        key: 'operation',
+
+        render: (text, row) => (
+          <Space size='middle'>
+            <a
+              onClick={() => {
+                switchStatus(null, { review_id: row.review_id }).then((res) => {
+                  message.success(res.message)
+                  fetchData()
+                })
+              }}
+            >
+              Switch
+            </a>
+          </Space>
+        ),
+      },
+    ]
+    return (
       <Table
+        rowKey='review_id'
+        columns={columns}
+        dataSource={e.comments}
+        pagination={false}
+      />
+    )
+  }
+
+  return (
+    <div style={{padding: '20px 50px'}} className='comments-container'>
+      <Table
+        rowKey='id'
+        loading={isLoading}
         columns={columns}
         expandable={{
           expandedRowRender,
-          defaultExpandedRowKeys: ['0'],
         }}
         dataSource={data}
       />
-    </>
-  );
+    </div>
+  )
 }
 
-const data = [
-    {
-      key: '1',
-      id:'1',
-      attractionid:'10',
-      name: 'John Brown',
-      age: 32,
-      usercomments:10,
-      email:'zhjhk@126.com',
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      id:'2',
-      attractionid:'20',
-      name: 'Jim Green',
-      age: 42,
-      usercomments:20,
-      email:'zGreenhk@126.com',
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      id:'3',
-      attractionid:'30',
-      name: 'Joe Black',
-      age: 32,
-      usercomments:30,
-      email:'BUk@163.com',
-      address: 'Sydney No. 1 Lake Park',
-    },
-    {
-      key: '4',
-      id:'4',
-      attractionid:'40',
-      name: 'Jim Red',
-      age: 32,
-      usercomments:50,
-      email:'zGreenhk@163.com',
-      address: 'London No. 2 Lake Park',
-    },
-    {
-        key: '5',
-        id:'5',
-        attractionid:'50',
-        name: 'Walker Green',
-        age: 52,
-        usercomments:60,
-        email:'zGreenhk@gmail.com',
-        address: 'Beijing No. 2 Lake Park',
-      },
-  ];
+export default Contact
 
-export default Contact;

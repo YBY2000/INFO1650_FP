@@ -1,64 +1,150 @@
-import React, { useState,useEffect } from 'react';
-import './index.sass'; // Import the CSS file for styling
-import useRequest from '../../hooks/useRequest';
-import { Table,Space,Input,Button,Select } from 'antd';
-import { AudioOutlined} from '@ant-design/icons';
 
-const handleChange = (value) => {
-  console.log(`selected ${value}`);
-};
-const { Search } = Input;
-const suffix = (
-    <AudioOutlined
-      style={{
-        fontSize: 16,
-        color: '#1677ff',
-      }}
-    />
-  );
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+import React, { useState, useEffect } from 'react'
+import './index.sass' // Import the CSS file for styling
+import useRequest from '../../hooks/useRequest'
+import { Table, Space, Input, Button, Select, Form, Row, message } from 'antd'
+
+const countryOptions = [
+  {
+    label: 'United States',
+    value: 0,
+  },
+  {
+    label: 'Canada',
+    value: 1,
+  },
+  {
+    label: 'United Kingdom',
+    value: 2,
+  },
+  {
+    label: 'Germany',
+    value: 3,
+  },
+  {
+    label: 'France',
+    value: 4,
+  },
+  {
+    label: 'Australia',
+    value: 5,
+  },
+  {
+    label: 'Japan',
+    value: 6,
+  },
+  {
+    label: 'South Korea',
+    value: 7,
+  },
+  {
+    label: 'China',
+    value: 8,
+  },
+  {
+    label: 'India',
+    value: 9,
+  },
+  {
+    label: 'Brazil',
+    value: 10,
+  },
+  {
+    label: 'Mexico',
+    value: 11,
+  },
+  {
+    label: 'Italy',
+    value: 12,
+  },
+  {
+    label: 'Spain',
+    value: 13,
+  },
+  {
+    label: 'Russia',
+    value: 14,
+  },
+  {
+    label: 'South Africa',
+    value: 15,
+  },
+  {
+    label: 'Egypt',
+    value: 16,
+  },
+  {
+    label: 'Nigeria',
+    value: 17,
+  },
+  {
+    label: 'Argentina',
+    value: 18,
+  },
+  {
+    label: 'Sweden',
+    value: 19,
+  },
+]
+
+const InterestsOptions = [
+  {
+    value: 0,
+    label: 'City views',
+  },
+  {
+    value: 1,
+    label: 'Natural views',
+  },
+  {
+    value: 2,
+    label: 'Historical sites',
+  },
+  {
+    value: 3,
+    label: 'Cultural scenes',
+  },
+  {
+    value: 4,
+    label: 'Adventure and sports',
+  },
+]
 
 const Contact = () => {
-  const { request, isLoading, error } = useRequest('/user/getAll', { method: 'GET' });
-  //get/POst
-  const fetchData = async () => {
-    const dataList = await request();
-    if (!error) {
-    }
-  };
+  const [form] = Form.useForm()
+  const [data, setData] = useState()
+  const [emailFilter, setEmailFilter] = useState()
+  const [queryParams, setQueryParams] = useState()
 
-  
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const { request, isLoading, error } = useRequest('/user', {
+    method: 'POST',
+  })
+  const { request: deleteUser } = useRequest('/user/delete', {
+    method: 'DELETE',
+  })
 
 
-
-  
   const columns = [
-      {
-          title: 'ID',
-          dataIndex: 'id',
-          defaultSortOrder: 'descend',
-          sorter: (a, b) => a.id - b.id,
-        },
+    {
+      title: 'ID',
+      dataIndex: 'userId',
+    },
     {
       title: 'User Name',
-      dataIndex: 'name',
+      dataIndex: 'fullName',
       // specify the condition of filtering result
       // here is that finding the name started with `value`
-      onFilter: (value, record) => record.name.indexOf(value) === 0,
-      sorter: (a, b) => a.name.length - b.name.length,
+      onFilter: (value, record) => record.fullName.indexOf(value) === 0,
+      sorter: (a, b) => a.fullName.length - b.fullName.length,
       sortDirections: ['descend'],
     },
     {
       title: 'Gender',
       dataIndex: 'gender',
+      render: (txt, row) => (row.gender ? <>male</> : <>female</>),
     },
     {
+
       title: 'Age',
       dataIndex: 'age',
       defaultSortOrder: 'descend',
@@ -67,36 +153,26 @@ const Contact = () => {
     {
       title: 'Country',
       dataIndex: 'country',
+      render: (txt, row) => {
+        return countryOptions.find((c) => c.value == txt)?.label || ''
+      },
     },
-    {
-      title: 'Comments Count',
-      dataIndex: 'usercomments',
-      defaultSortOrder: 'descend',
-      sorter: (a, b) => a.usercomments - b.age,
-    },
+    // {
+    //   title: 'Comments Count',
+    //   dataIndex: 'usercomments',
+    //   defaultSortOrder: 'descend',
+    //   sorter: (a, b) => a.usercomments - b.age,
+    // },
     {
       title: 'Creation Time',
-      dataIndex: 'creationtime',
+      dataIndex: 'createdAt',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => a.creationtime - b.creationtime,
+      sorter: (a, b) => a.createdAt - b.createdAt,
     },
     {
       title: 'E-mail',
       dataIndex: 'email',
-      filters: [
-        {
-          text: 'gmail',
-          value: 'gmail',
-        },
-        {
-          text: '126',
-          value: '126',
-        },
-        {
-          text: '163',
-          value: '163',
-        },
-      ],
+      filters: emailFilter,
       // specify the condition of filtering result
       // here is that finding the name started with `value`
       sorter: (a, b) => a.email.length - b.email.length,
@@ -113,148 +189,151 @@ const Contact = () => {
     {
       title: 'Interests',
       dataIndex: 'interest',
+      render: (row, text) => {
+        return row
+          .map((r) => InterestsOptions.find((i) => i.value == r).label)
+          .join(',')
+
+      },
     },
     {
       title: 'Action',
       key: 'operation',
       fixed: 'right',
       width: 200,
-      render: () => <div><a>Edit</a>  /  <a>Delete</a></div>
+      render: (txt, row) => (
+        <div>
+          <a
+            onClick={() => {
+              deleteRow(row)
+            }}
+          >
+            Delete
+          </a>
+        </div>
+      ),
     },
-  ];
+  ]
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
+  const fetchData = async () => {
+    const res = await request(queryParams || {})
+    if (!error) {
+      setData(res.data.users)
+      const emailfilter = res.data.users.map((u) => {
+        return {
+          text: u.email,
+          value: u.email,
+        }
+      })
+      setEmailFilter(emailfilter)
+    }
+  }
 
-  return(
-<>
+  const deleteRow = (row) => {
+    deleteUser({ email: row.email }).then((res) => {
+      message.success(res.message)
+      fetchData()
+    })
+  }
+
+  const search = () => {
+    const queryParams = form.getFieldsValue()
+    setQueryParams(queryParams)
+  }
+
+  const reset = () => {
+    form.resetFields()
+  }
+
+  useEffect(() => {
+    if (queryParams) {
+      fetchData()
+    }
+  }, [queryParams])
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  return (
+    <>
       <Space
         style={{
-          marginBottom: 16,
+          margin: '20px 50px',
         }}
       >
-        <Input placeholder="Email" />
-        <Input placeholder="Full Name" />
-        <Input placeholder="MinAge" />
-        <Input placeholder="MaxAge" />
-        <Select
-          defaultValue="gender"
-          style={{
-            width: 120,
-          }}
-          onChange={handleChange}
-          options={[
-            {
-              value: 'gender',
-              label: 'Gender',
-            },
-          ]}
-        />
-        <Select
-          defaultValue="country"
-          style={{
-            width: 120,
-          }}
-          onChange={handleChange}
-          options={[
-            {
-              value: 'country',
-              label: 'Country',
-            },
-          ]}
-        />
-        <Select
-          defaultValue="usertype"
-          style={{
-            width: 120,
-          }}
-          onChange={handleChange}
-          options={[
-            {
-              value: 'usertype',
-              label: 'Usertype', //1 -- admin  0--normal user
-            },
-          ]}
-        />
-        <Button type="primary">Search</Button>
+        <Form form={form} layout='inline'>
+          <Row>
+            <Form.Item label='Email' name='email'>
+              <Input placeholder='Email' />
+            </Form.Item>
+            <Form.Item label='Full Name' name='fullName'>
+              <Input placeholder='Full Name' />
+            </Form.Item>
+            <Form.Item label='Min Age' name='minAge'>
+              <Input placeholder='MinAge' />
+            </Form.Item>
+            <Form.Item label='Max Age' name='maxAge'>
+              <Input placeholder='MaxAge' />
+            </Form.Item>
+            <Form.Item label='Gender' name='gender'>
+              <Select
+                style={{ minWidth: 120 }}
+                options={[
+                  {
+                    value: 1,
+                    label: 'Male',
+                  },
+                  {
+                    value: 0,
+                    label: 'Female',
+                  },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label='Country' name='country'>
+              <Select style={{ minWidth: 120 }} options={countryOptions} />
+            </Form.Item>
+            <Form.Item label='User Type' name='userType'>
+              <Select
+                style={{ minWidth: 120 }}
+                options={[
+                  {
+                    value: 1,
+                    label: 'Admin', //1 -- admin  0--normal user
+                  },
+                  {
+                    value: 0,
+                    label: 'Normal User', //1 -- admin  0--normal user
+                  },
+                ]}
+              />
+            </Form.Item>
+          </Row>
+          <Row>
+            <Button style={{ width: '120px' }} type='primary' onClick={search}>
+              Search
+            </Button>
+            <Button
+              style={{ width: '120px', marginLeft: '10px' }}
+              type='primary'
+              onClick={reset}
+            >
+              Reset
+            </Button>
+          </Row>
+        </Form>
       </Space>
-      <Table columns={columns} dataSource={data} onChange={handleChange} />
-    </>)
+      <Table
+        rowKey='userId'
+        loading={isLoading}
+        columns={columns}
+        dataSource={data}
+      />
+    </>
+  )
 }
 
-const data = [
-    {
-      key: '1',
-      id:'1',
-      name: 'John Brown',
-      age: 32,
-      usercomments:10,
-      email:'zhjhk@126.com',
-      address: 'New York No. 1 Lake Park',
-      creationtime:'153135',
-      gender:'1',
-      country:'CN',
-      description:'XXXXXXXXXXXXX',
-      interest:'0',
 
-    },
-    {
-      key: '2',
-      id:'2',
-      name: 'Jim Green',
-      age: 42,
-      usercomments:20,
-      email:'zGreenhk@126.com',
-      address: 'London No. 1 Lake Park',
-      creationtime:'153135',
-      gender:'1',
-      country:'CN',
-      description:'XXXXXXXXXXXXX',
-      interest:'0',
-    },
-    {
-      key: '3',
-      id:'3',
-      name: 'Joe Black',
-      age: 32,
-      usercomments:30,
-      email:'BUk@163.com',
-      address: 'Sydney No. 1 Lake Park',
-      creationtime:'153135',
-      gender:'1',
-      country:'CN',
-      description:'XXXXXXXXXXXXX',
-      interest:'0',
-    },
-    {
-      key: '4',
-      id:'4',
-      name: 'Jim Red',
-      age: 32,
-      usercomments:50,
-      email:'zGreenhk@163.com',
-      address: 'London No. 2 Lake Park',
-      creationtime:'153135',
-      gender:'1',
-      country:'CN',
-      description:'XXXXXXXXXXXXX',
-      interest:'0',
-    },
-    {
-        key: '5',
-        id:'5',
-        name: 'Walker Green',
-        age: 52,
-        usercomments:60,
-        email:'zGreenhk@gmail.com',
-        address: 'Beijing No. 2 Lake Park',
-        creationtime:'153135',
-        gender:'1',
-        country:'CN',
-        description:'XXXXXXXXXXXXX',
-        interest:'0',
-      },
-  ];
+export default Contact
 
-export default Contact;
