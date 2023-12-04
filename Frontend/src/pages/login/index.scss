@@ -125,3 +125,46 @@ h1{
   color: black; /* or any color that suits your design */
   /* Add other styling as needed */
 }
+
+@media (max-width: 800px) {
+    body {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+
+        .loginContainer {
+            margin: 100px;
+            grid-template-columns: 1fr;
+
+            img {
+                display: none;
+            }
+
+        }
+
+        .backButtonContainer {
+
+            margin-left: 100px;
+            margin-right: auto;
+    
+        }
+
+    }
+    h1{
+        font-size: 5vw !important;
+    }
+
+    
+
+    .form-control {
+        width: auto;
+    }
+
+    .was-validated {
+        .btn {
+            width: auto;
+        }
+    }
+}
