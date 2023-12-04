@@ -38,6 +38,7 @@ exports.addComment = async (req, res) => {
             detailed_review,
             status: 1
         });
+
         await newComment.save();
         res.success({ newComment }, 'Comment added successfully');
     } catch (error) {

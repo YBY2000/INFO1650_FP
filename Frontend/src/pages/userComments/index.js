@@ -1,7 +1,9 @@
+
 import React, { useEffect, useState } from 'react'
 import './index.sass' // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest'
 import { Table, Space, Badge, message } from 'antd'
+
 
 const Contact = () => {
   const [data, setData] = useState()
@@ -15,13 +17,16 @@ const Contact = () => {
   const fetchData = async () => {
     const res = await request()
     if (!error) {
+
       setData(res.data.attractions)
+
     }
   }
 
   useEffect(() => {
     fetchData()
   }, [])
+
 
   const columns = [
     {
@@ -86,11 +91,13 @@ const Contact = () => {
           ) : (
             <Badge status='success' text='enable' />
           ),
+
       },
       {
         title: 'Action',
         dataIndex: 'operation',
         key: 'operation',
+
         render: (text, row) => (
           <Space size='middle'>
             <a
@@ -133,3 +140,4 @@ const Contact = () => {
 }
 
 export default Contact
+

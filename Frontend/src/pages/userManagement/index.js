@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react'
 import './index.sass' // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest'
@@ -122,6 +123,7 @@ const Contact = () => {
     method: 'DELETE',
   })
 
+
   const columns = [
     {
       title: 'ID',
@@ -142,6 +144,7 @@ const Contact = () => {
       render: (txt, row) => (row.gender ? <>male</> : <>female</>),
     },
     {
+
       title: 'Age',
       dataIndex: 'age',
       defaultSortOrder: 'descend',
@@ -190,6 +193,7 @@ const Contact = () => {
         return row
           .map((r) => InterestsOptions.find((i) => i.value == r).label)
           .join(',')
+
       },
     },
     {
@@ -330,4 +334,6 @@ const Contact = () => {
   )
 }
 
+
 export default Contact
+
