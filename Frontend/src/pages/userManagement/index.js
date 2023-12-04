@@ -182,10 +182,6 @@ const Contact = () => {
       sortDirections: ['descend'],
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-    },
-    {
       title: 'Description',
       dataIndex: 'description',
     },
