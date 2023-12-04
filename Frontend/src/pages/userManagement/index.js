@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import './index.sass' // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest'
 import { Table, Space, Input, Button, Select, Form, Row, message } from 'antd'
+import moment from 'moment';
+
 
 const countryOptions = [
   {
@@ -164,8 +166,12 @@ const Contact = () => {
       title: 'Creation Time',
       dataIndex: 'createdAt',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => a.createdAt - b.createdAt,
+      sorter: (a, b) => moment(a.createdAt).unix() - moment(b.createdAt).unix(),
+      render: (text) => {
+        return moment(text).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
+    
     {
       title: 'E-mail',
       dataIndex: 'email',
