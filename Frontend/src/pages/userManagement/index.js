@@ -3,6 +3,112 @@ import './index.sass' // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest'
 import { Table, Space, Input, Button, Select, Form, Row, message } from 'antd'
 
+const countryOptions = [
+  {
+    label: 'United States',
+    value: 0,
+  },
+  {
+    label: 'Canada',
+    value: 1,
+  },
+  {
+    label: 'United Kingdom',
+    value: 2,
+  },
+  {
+    label: 'Germany',
+    value: 3,
+  },
+  {
+    label: 'France',
+    value: 4,
+  },
+  {
+    label: 'Australia',
+    value: 5,
+  },
+  {
+    label: 'Japan',
+    value: 6,
+  },
+  {
+    label: 'South Korea',
+    value: 7,
+  },
+  {
+    label: 'China',
+    value: 8,
+  },
+  {
+    label: 'India',
+    value: 9,
+  },
+  {
+    label: 'Brazil',
+    value: 10,
+  },
+  {
+    label: 'Mexico',
+    value: 11,
+  },
+  {
+    label: 'Italy',
+    value: 12,
+  },
+  {
+    label: 'Spain',
+    value: 13,
+  },
+  {
+    label: 'Russia',
+    value: 14,
+  },
+  {
+    label: 'South Africa',
+    value: 15,
+  },
+  {
+    label: 'Egypt',
+    value: 16,
+  },
+  {
+    label: 'Nigeria',
+    value: 17,
+  },
+  {
+    label: 'Argentina',
+    value: 18,
+  },
+  {
+    label: 'Sweden',
+    value: 19,
+  },
+]
+
+const InterestsOptions = [
+  {
+    value: 0,
+    label: 'City views',
+  },
+  {
+    value: 1,
+    label: 'Natural views',
+  },
+  {
+    value: 2,
+    label: 'Historical sites',
+  },
+  {
+    value: 3,
+    label: 'Cultural scenes',
+  },
+  {
+    value: 4,
+    label: 'Adventure and sports',
+  },
+]
+
 const Contact = () => {
   const [form] = Form.useForm()
   const [data, setData] = useState()
@@ -44,6 +150,9 @@ const Contact = () => {
     {
       title: 'Country',
       dataIndex: 'country',
+      render: (txt, row) => {
+        return countryOptions.find((c) => c.value == txt).label
+      },
     },
     // {
     //   title: 'Comments Count',
@@ -77,6 +186,11 @@ const Contact = () => {
     {
       title: 'Interests',
       dataIndex: 'interest',
+      render: (row, text) => {
+        return row
+          .map((r) => InterestsOptions.find((i) => i.value == r).label)
+          .join(',')
+      },
     },
     {
       title: 'Action',
@@ -123,6 +237,10 @@ const Contact = () => {
     setQueryParams(queryParams)
   }
 
+  const reset = () => {
+    form.resetFields()
+  }
+
   useEffect(() => {
     if (queryParams) {
       fetchData()
@@ -130,7 +248,7 @@ const Contact = () => {
   }, [queryParams])
 
   useEffect(() => {
-    fetchData()
+    // fetchData()
   }, [])
 
   return (
@@ -170,91 +288,7 @@ const Contact = () => {
               />
             </Form.Item>
             <Form.Item label='Country' name='country'>
-              <Select
-                style={{ minWidth: 120 }}
-                options={[
-                  {
-                    label: 'United States',
-                    value: 0,
-                  },
-                  {
-                    label: 'Canada',
-                    value: 1,
-                  },
-                  {
-                    label: 'United Kingdom',
-                    value: 2,
-                  },
-                  {
-                    label: 'Germany',
-                    value: 3,
-                  },
-                  {
-                    label: 'France',
-                    value: 4,
-                  },
-                  {
-                    label: 'Australia',
-                    value: 5,
-                  },
-                  {
-                    label: 'Japan',
-                    value: 6,
-                  },
-                  {
-                    label: 'South Korea',
-                    value: 7,
-                  },
-                  {
-                    label: 'China',
-                    value: 8,
-                  },
-                  {
-                    label: 'India',
-                    value: 9,
-                  },
-                  {
-                    label: 'Brazil',
-                    value: 10,
-                  },
-                  {
-                    label: 'Mexico',
-                    value: 11,
-                  },
-                  {
-                    label: 'Italy',
-                    value: 12,
-                  },
-                  {
-                    label: 'Spain',
-                    value: 13,
-                  },
-                  {
-                    label: 'Russia',
-                    value: 14,
-                  },
-                  {
-                    label: 'South Africa',
-                    value: 15,
-                  },
-                  {
-                    label: 'Egypt',
-                    value: 16,
-                  },
-                  {
-                    label: 'Nigeria',
-                    value: 17,
-                  },
-                  {
-                    label: 'Argentina',
-                    value: 18,
-                  },
-                  {
-                    label: 'Sweden',
-                    value: 19,
-                  },
-                ]}
-              />
+              <Select style={{ minWidth: 120 }} options={countryOptions} />
             </Form.Item>
             <Form.Item label='User Type' name='userType'>
               <Select
@@ -272,9 +306,18 @@ const Contact = () => {
               />
             </Form.Item>
           </Row>
-          <Button style={{width: '120px'}} type='primary' onClick={search}>
-            Search
-          </Button>
+          <Row>
+            <Button style={{ width: '120px' }} type='primary' onClick={search}>
+              Search
+            </Button>
+            <Button
+              style={{ width: '120px', marginLeft: '10px' }}
+              type='primary'
+              onClick={reset}
+            >
+              Reset
+            </Button>
+          </Row>
         </Form>
       </Space>
       <Table
