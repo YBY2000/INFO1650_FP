@@ -151,7 +151,7 @@ const Contact = () => {
       title: 'Country',
       dataIndex: 'country',
       render: (txt, row) => {
-        return countryOptions.find((c) => c.value == txt).label
+        return countryOptions.find((c) => c.value == txt)?.label || ''
       },
     },
     // {
@@ -248,7 +248,7 @@ const Contact = () => {
   }, [queryParams])
 
   useEffect(() => {
-    // fetchData()
+    fetchData()
   }, [])
 
   return (
