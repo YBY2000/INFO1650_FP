@@ -45,7 +45,7 @@ class Homepage extends Component {
 
         return (
             <div className='App'>
-                <SearchBar onChangeHandler={onSearchChange} />
+                {/* <SearchBar onChangeHandler={onSearchChange} /> */}
                 {/* <CardList attractions={filteredAttractions} /> */}
                 <Cards attractions={filteredAttractions} />
             </div>

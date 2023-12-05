@@ -2,10 +2,9 @@ body {
   background-color: #e2eaff !important;
 }
 
-.navbar {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
+.nav-txt {
+    color: #007bff !important;
+    font-size: 1.25rem !important;
 }
 
 .nav-list {
@@ -32,6 +31,12 @@ body {
     text-decoration: underline;
 }
 
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -47,4 +52,12 @@ body {
     color: #fff;
     padding: 10px;
     text-align: center;
+}
+
+.homepageLogo {
+    margin-right: 30px;
+}
+
+.nav-profile {
+    align-content: end;
 }

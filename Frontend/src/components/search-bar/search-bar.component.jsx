@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import './search-bar.style.css'
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
+import { Navbar, Nav, NavDropdown, Container, Form, Row, Col } from 'react-bootstrap';
+
 
 class SearchBar extends Component {
     render() {
