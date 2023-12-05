@@ -33,7 +33,7 @@ const Detail = () => {
     const [startIndex,SetstartIndex]=useState(0);
     const [Predisable,setPrevdisable]=useState(true);
     const [Nextdisable,setNextdisable]=useState(true);
-    const [CommentStar,SetCommentStar]=useState(1);
+    const [CommentStar,SetCommentStar]=useState(5);
 
     const fetchData = async () => {
         const attrData = await requestAttraction();
@@ -106,24 +106,6 @@ const Detail = () => {
         }
         return divs
     }
-    const generateStar=(attraction)=>{
-        const divs=[]
-        const rate=attraction.rate;
-        var rounded=Math.round(parseFloat(attraction.rating));
-        for(let i=1;i<=5;i++){
-            if (i<=rounded){
-                divs.push(
-                    <span data-value={i} className="active">★</span>
-                )
-            }
-            else{
-                divs.push(
-                    <span data-value={i}>☆</span>
-                )
-            }
-        }
-        return divs;
-    }
     const generateRateInfoList=()=>{
         const attraction=AttractionData
         const divs=[]
@@ -187,7 +169,8 @@ const Detail = () => {
             const divs=[];
             for(let i=index;i<=index+3;i++){
                 if (i<commentNum){
-                    let comment=CommentData[i];
+                    let comment =CommentData[i];
+                    const { star_rating } = comment;
                     divs.push(
                         <div className="detail_comments_item_container" >
                             <div className="detail_comment_c1">
@@ -204,7 +187,7 @@ const Detail = () => {
                             <div className="detail_comment_c2">
                                 <h4 className="detail_comment_title">{comment.review_title}</h4>
                                 <div className="detail_comment_rate">
-                                    <Rate disabled allowHalf defaultValue={comment.star_rating}/>
+                                    <Rate disabled allowHalf value={star_rating} />
                                     <span className="detail_comment_rate_time"
                                           style={{marginLeft:'20px'}}>{comment.review_time}
                                 </span>
@@ -292,22 +275,6 @@ const Detail = () => {
             }
         }
         return divs
-    }
-
-    const generateSubmitStar=()=>{
-        const handleMouseEnter=(e)=>{
-            let i =parseInt(e.target.getAttribute('data-value'))
-            SetSelectedStar(i);
-        }
-        const divs=[];
-        for (let i=1;i<=5;i++){
-            divs.push(
-                i<=SelectedStar?(<span data-value={i.toString()} className="active" onMouseEnter={handleMouseEnter}>★</span>):(
-                    <span data-value={i.toString() } onMouseEnter={handleMouseEnter}>☆</span>
-                )
-            )
-        }
-        return divs;
     }
     const handleRateChange=(newvalue)=>{
         SetCommentStar(newvalue);
@@ -516,7 +483,7 @@ const Detail = () => {
                         </div>
                         <div className="detail_comment_input_rate_button_container">
                             <div className="detail_input_start_container">
-                                <Rate onChange={handleRateChange} allowHalf  allowClear={false} defaultValue={5} className="custom-comment-star"/>
+                                <Rate onChange={handleRateChange} allowHalf allowClear={false} defaultValue={CommentStar} className="custom-comment-star"/>
                             </div>
                             <button
                                 type="button"
