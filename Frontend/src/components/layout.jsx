@@ -67,7 +67,7 @@ const Layout = ({ children }) => {
               </Nav>
             )} */}
             <div className='nav-profile'>
-              {isLoggedIn ? (
+              {true ? (
                 <ProfileDropdown />
               ) : (
                 <a href="login.html" className="d-block link-body-emphasis text-decoration-none">
