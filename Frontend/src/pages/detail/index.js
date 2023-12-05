@@ -7,6 +7,8 @@ import {Link, useLocation} from 'react-router-dom';
 import {Rate} from 'antd';
 import 'antd/dist/antd.js'
 import { Empty } from 'antd';
+import { Breadcrumb } from 'antd';
+import { HomeOutlined} from '@ant-design/icons';
 const fake_attraction=getFakeAttraction();
 const fake_comment=getFakeComment();
 const style = {
@@ -337,14 +339,18 @@ const Detail = () => {
         <div className="detail_body">
             <div className="detail_main_container">
                 <div className="detail_breadcrumb_container">
-                    <nav style={style} aria-label="breadcrumb">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item">
-                                <Link to="/home">Home</Link>
-                            </li>
-                            <li className="breadcrumb-item active" aria-current="page">Library</li>
-                        </ol>
-                    </nav>
+                    <Breadcrumb
+                        separator=">"
+                        items={[
+                            {
+                                href: '/Home',
+                                title: <HomeOutlined />,
+                            },
+                            {
+                                title: 'Attraction',
+                            },
+                        ]}
+                    />
                 </div>
                 <div className="detail_pic_rate_container">
                     <div className="detail_carousel_container" id="attraction_vue">
