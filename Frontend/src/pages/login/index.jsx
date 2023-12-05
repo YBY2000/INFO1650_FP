@@ -46,7 +46,12 @@ const LoginPage = () => {
 
       if (data.success) {
         alert('Login successful!');
+        console.log(data.data);
         localStorage.setItem('token', data.data.token);
+        localStorage.setItem('avatar', data.data.user.avatar);
+        localStorage.setItem('fullName', data.data.user.fullName);
+        console.log(localStorage);
+
         navigate('/home');
       } else {
         alert(data.message || 'Login failed');
