@@ -1,9 +1,12 @@
-import React, { useState,useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import './Detail-SASS/detail_main.css';
 import useRequest from '../../hooks/useRequest';
 import getFakeComment from "./fakeComment";
 import getFakeAttraction from "./fakeAttraction";
 import {Link, useLocation} from 'react-router-dom';
+import {Rate} from 'antd';
+import 'antd/dist/antd.js'
+
 const fake_attraction=getFakeAttraction();
 const fake_comment=getFakeComment();
 const style = {
@@ -30,10 +33,8 @@ const Detail = () => {
     const [startIndex,SetstartIndex]=useState(0);
     const [Predisable,setPrevdisable]=useState(true);
     const [Nextdisable,setNextdisable]=useState(true);
+    const [CommentStar,SetCommentStar]=useState(1);
 
-    setTimeout(()=> {
-        setLoading(false);
-    }, 2000);
     const fetchData = async () => {
         const attrData = await requestAttraction();
         const commentData=await requestComments();
@@ -51,7 +52,13 @@ const Detail = () => {
             }
         }
     };
+    useEffect(()=>{
+        console.log(startIndex);
+    },[startIndex]);
     useEffect(() => {
+        setTimeout(()=> {
+            setLoading(false);
+        }, 2000);
         const token = localStorage.getItem('token');
         if (token) {
             Settoken(token);
@@ -72,11 +79,6 @@ const Detail = () => {
             setNextdisable(false);
         }
     },[startIndex,commentNum])
-    useEffect(()=>{
-        if (AttractionData) {
-            console.log(AttractionData); // 这里将在 AttractionData 更新后执行
-        }
-    },[AttractionData])
     if (!AttractionData || ! CommentData) {
         return <div>Loading...</div>; // 在数据加载时显示加载指示
     }
@@ -133,7 +135,7 @@ const Detail = () => {
         divs.push(
             <li className="list-group-item d-flex justify-content-between align-items-center">
                 <div className="detail_rating" style={{ fontSize: '35px' }}>
-                    {generateStar(attraction)}
+                    <Rate className="info-show" disabled allowHalf defaultValue={attraction.rating}/>
                 </div>
                 <div className="detail_score">
                     <h2><span className='detail_yellow_bold'>{attraction.rating}</span><span style={{ fontSize: '20px' }}>/5.0</span>
@@ -174,36 +176,59 @@ const Detail = () => {
         return divs;
     }
     const generateComment=()=>{
-        return (
-            Loading ? (
-                <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>
-            ):(
+        console.log("generate Comment");
+        const index=startIndex;
+        if(Loading===true){
+            return (<div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>);
+        }
+        else{
+            const divs=[];
+            for(let i=index;i<=index+3;i++){
+                if (i<commentNum){
+                    let comment=CommentData[i];
+                    divs.push(
+                        <div className="detail_comments_item_container" >
+                            <div className="detail_comment_c1">
+                                <div className="detail_comment_icon">
+                                    <img
+                                        src={comment.avatar}
+                                        style={{ height: '80%', width: '80%', margin: '10%' }}
+                                    />
+                                </div>
+                                <div className="detail_comment_name" style={{marginLeft: '8%'}}>
+                                    {comment.reviewer_name}
+                                </div>
+                            </div>
+                            <div className="detail_comment_c2">
+                                <h4 className="detail_comment_title">{comment.review_title}</h4>
+                                <div className="detail_comment_rate">
+                                    <Rate disabled allowHalf defaultValue={comment.star_rating}/>
+                                    <span className="detail_comment_rate_time"
+                                          style={{marginLeft:'20px'}}>{comment.review_time}
+                                </span>
+                                </div>
+                                <div className="detail_comment_text">
+                                    <p>
+                                        {comment.detailed_review}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            }
+            return(
                 <div className="detail_comment_contents" >
-                    {generateSingleComment()}
+                    {divs}
                 </div>
             )
-        )
-    }
-    const generateCommentStar=(rate)=>{
-        const rounded=Math.round(rate);
-        const divs=[]
-        for(let i=1;i<=5;i++){
-            if (i<=rounded){
-                divs.push(
-                    <span  style={{color: 'orange'}}
-                          className="detail_comment_rate_star">★</span>
-                )
-            }
-            else{
-                divs.push(
-                    <span className="detail_comment_rate_star">☆</span>
-                )
-            }
         }
-        return divs;
+
+
     }
+
     const generateSwitchPage=()=>{
         const divs=[];
         const totalpage=Math.ceil(commentNum/4);
@@ -230,9 +255,9 @@ const Detail = () => {
         }
         return divs;
     }
-    const generateSingleComment=()=>{
+    const generateSingleComment=(index)=>{
         const divs=[];
-        for(let i=startIndex;i<=startIndex+3;i++){
+        for(let i=index;i<=index+3;i++){
             if (i<commentNum){
                 let comment=CommentData[i];
                 divs.push(
@@ -251,7 +276,7 @@ const Detail = () => {
                         <div className="detail_comment_c2">
                             <h4 className="detail_comment_title">{comment.review_title}</h4>
                             <div className="detail_comment_rate">
-                                {generateCommentStar(comment.star_rating)}
+                                <Rate disabled allowHalf defaultValue={comment.star_rating}/>
                                 <span className="detail_comment_rate_time"
                                       style={{marginLeft:'20px'}}>{comment.review_time}
                                 </span>
@@ -284,6 +309,10 @@ const Detail = () => {
         }
         return divs;
     }
+    const handleRateChange=(newvalue)=>{
+        SetCommentStar(newvalue);
+        console.log(newvalue);
+    }
     const handleSubmit=async ()=>{
         const token = localStorage.getItem('token');
         if (!token){
@@ -296,7 +325,7 @@ const Detail = () => {
         const data = {
             attraction_id: id.toString(),
             review_title: CommentTitle,
-            star_rating: SelectedStar.toString(),
+            star_rating: CommentStar,
             detailed_review: CommentBody
         }
         try {
@@ -487,7 +516,7 @@ const Detail = () => {
                         </div>
                         <div className="detail_comment_input_rate_button_container">
                             <div className="detail_input_start_container">
-                                {generateSubmitStar()}
+                                <Rate onChange={handleRateChange} allowHalf  allowClear={false} defaultValue={5} className="custom-comment-star"/>
                             </div>
                             <button
                                 type="button"
