@@ -6,7 +6,7 @@ import getFakeAttraction from "./fakeAttraction";
 import {Link, useLocation} from 'react-router-dom';
 import {Rate} from 'antd';
 import 'antd/dist/antd.js'
-
+import { Empty } from 'antd';
 const fake_attraction=getFakeAttraction();
 const fake_comment=getFakeComment();
 const style = {
@@ -16,6 +16,7 @@ const style = {
 
 const Detail = () => {
     const [token,Settoken]=useState(null);
+    const regex = /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/
     //获取attraction id
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -23,7 +24,6 @@ const Detail = () => {
     const { request: requestComments, isLoading: isLoadingComments, error: errorComments } = useRequest(`/comment?attraction_id=${id}`, { method: 'GET' });
     const { request: requestAttraction, isLoading: isLoadingAttraction, error: errorAttraction } = useRequest(`/attraction?id=${id}`, { method: 'GET' });
     const { request: postComments, isLoadingLisLoadingPost, error: errorPost}=useRequest('/comment/add',{method:'POST',headers: {'Authorization': `Bearer ${token}`}});
-    const [SelectedStar,SetSelectedStar]=useState(1);
     const [CommentTitle,SetCommentTitle]=useState('');
     const [CommentBody,SetCommentBody]=useState('');
     const [Loading,setLoading]=useState(true);
@@ -106,24 +106,6 @@ const Detail = () => {
         }
         return divs
     }
-    const generateStar=(attraction)=>{
-        const divs=[]
-        const rate=attraction.rate;
-        var rounded=Math.round(parseFloat(attraction.rating));
-        for(let i=1;i<=5;i++){
-            if (i<=rounded){
-                divs.push(
-                    <span data-value={i} className="active">★</span>
-                )
-            }
-            else{
-                divs.push(
-                    <span data-value={i}>☆</span>
-                )
-            }
-        }
-        return divs;
-    }
     const generateRateInfoList=()=>{
         const attraction=AttractionData
         const divs=[]
@@ -135,7 +117,7 @@ const Detail = () => {
         divs.push(
             <li className="list-group-item d-flex justify-content-between align-items-center">
                 <div className="detail_rating" style={{ fontSize: '35px' }}>
-                    <Rate className="info-show" disabled allowHalf defaultValue={attraction.rating}/>
+                    <Rate className="info-show" disabled allowHalf value={attraction.rating}/>
                 </div>
                 <div className="detail_score">
                     <h2><span className='detail_yellow_bold'>{attraction.rating}</span><span style={{ fontSize: '20px' }}>/5.0</span>
@@ -177,51 +159,15 @@ const Detail = () => {
     }
     const generateComment=()=>{
         console.log("generate Comment");
-        const index=startIndex;
         if(Loading===true){
             return (<div className="spinner-border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </div>);
         }
         else{
-            const divs=[];
-            for(let i=index;i<=index+3;i++){
-                if (i<commentNum){
-                    let comment=CommentData[i];
-                    divs.push(
-                        <div className="detail_comments_item_container" >
-                            <div className="detail_comment_c1">
-                                <div className="detail_comment_icon">
-                                    <img
-                                        src={comment.avatar}
-                                        style={{ height: '80%', width: '80%', margin: '10%' }}
-                                    />
-                                </div>
-                                <div className="detail_comment_name" style={{marginLeft: '8%'}}>
-                                    {comment.reviewer_name}
-                                </div>
-                            </div>
-                            <div className="detail_comment_c2">
-                                <h4 className="detail_comment_title">{comment.review_title}</h4>
-                                <div className="detail_comment_rate">
-                                    <Rate disabled allowHalf defaultValue={comment.star_rating}/>
-                                    <span className="detail_comment_rate_time"
-                                          style={{marginLeft:'20px'}}>{comment.review_time}
-                                </span>
-                                </div>
-                                <div className="detail_comment_text">
-                                    <p>
-                                        {comment.detailed_review}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
-            }
             return(
                 <div className="detail_comment_contents" >
-                    {divs}
+                    {generateSingleComment(startIndex)}
                 </div>
             )
         }
@@ -256,6 +202,11 @@ const Detail = () => {
         return divs;
     }
     const generateSingleComment=(index)=>{
+        if(commentNum===0){
+            return (
+                <Empty />
+            )
+        }
         const divs=[];
         for(let i=index;i<=index+3;i++){
             if (i<commentNum){
@@ -276,10 +227,8 @@ const Detail = () => {
                         <div className="detail_comment_c2">
                             <h4 className="detail_comment_title">{comment.review_title}</h4>
                             <div className="detail_comment_rate">
-                                <Rate disabled allowHalf defaultValue={comment.star_rating}/>
-                                <span className="detail_comment_rate_time"
-                                      style={{marginLeft:'20px'}}>{comment.review_time}
-                                </span>
+                                <Rate className="Comment-Star" disabled allowHalf value={comment.star_rating}/>
+                                {generateDate(comment.review_time)}
                             </div>
                             <div className="detail_comment_text">
                                 <p>
@@ -293,25 +242,17 @@ const Detail = () => {
         }
         return divs
     }
-
-    const generateSubmitStar=()=>{
-        const handleMouseEnter=(e)=>{
-            let i =parseInt(e.target.getAttribute('data-value'))
-            SetSelectedStar(i);
-        }
-        const divs=[];
-        for (let i=1;i<=5;i++){
-            divs.push(
-                i<=SelectedStar?(<span data-value={i.toString()} className="active" onMouseEnter={handleMouseEnter}>★</span>):(
-                    <span data-value={i.toString() } onMouseEnter={handleMouseEnter}>☆</span>
-                )
-            )
-        }
-        return divs;
+    const generateDate=(s)=>{
+        const match = s.match(regex);
+        const formattedTime = match ? `${match[1]} ${match[2]}` : '';
+        return(
+            <span className="detail_comment_rate_time" style={{marginLeft:'10px'}}>
+                {formattedTime}
+            </span>
+        );
     }
     const handleRateChange=(newvalue)=>{
         SetCommentStar(newvalue);
-        console.log(newvalue);
     }
     const handleSubmit=async ()=>{
         const token = localStorage.getItem('token');
@@ -341,7 +282,57 @@ const Detail = () => {
             // 处理错误
         }
     }
+    const generateSwitchButton=()=>{
+        if (commentNum===0){
+            return (<div></div>)
+        }
+        else{
+            return(
+                <div className="detail_pagination_container">
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination justify-content-center">
 
+                            <li className={`page-item ${Predisable ? 'disabled' : ''}`}>
+                                <a
+                                    className="page-link"
+                                    href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+
+                                        function handlePagnitionClick(startIndex) {
+                                            SetstartIndex(startIndex-4);
+                                        }
+
+                                        handlePagnitionClick(startIndex);
+                                    }}
+                                >
+                                    Previous
+                                </a>
+                            </li>
+                            {generateSwitchPage()}
+                            <li className={`page-item ${Nextdisable ? 'disabled' : ''}`}>
+                                <a
+                                    className="page-link"
+                                    href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+
+                                        function handlePagnitionClick(startIndex) {
+                                            SetstartIndex(startIndex+4);
+                                        }
+
+                                        handlePagnitionClick(startIndex);
+                                    }}
+                                >
+                                    Next
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            )
+        }
+    }
     return (
         <div className="detail_body">
             <div className="detail_main_container">
@@ -460,47 +451,7 @@ const Detail = () => {
                     </div>
                     <div className="detail_comment_head">Comments</div>
                     {generateComment()}
-                    <div className="detail_pagination_container">
-                        <nav aria-label="Page navigation example">
-                            <ul className="pagination justify-content-center">
-                                <li className={`page-item ${Predisable ? 'disabled' : ''}`}>
-                                    <a
-                                        className="page-link"
-                                        href="#"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-
-                                            function handlePagnitionClick(startIndex) {
-                                                SetstartIndex(startIndex-4);
-                                            }
-
-                                            handlePagnitionClick(startIndex);
-                                        }}
-                                    >
-                                        Previous
-                                    </a>
-                                </li>
-                                {generateSwitchPage()}
-                                <li className={`page-item ${Nextdisable ? 'disabled' : ''}`}>
-                                    <a
-                                        className="page-link"
-                                        href="#"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-
-                                            function handlePagnitionClick(startIndex) {
-                                                SetstartIndex(startIndex+4);
-                                            }
-
-                                            handlePagnitionClick(startIndex);
-                                        }}
-                                    >
-                                        Next
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                    {generateSwitchButton()}
                     <div className="detail_comment_input">
                         <div className="detail_comment_input_text_container">
                             <textarea style={{resize:"none"}} className="detail_comment_textarea_title" name="comment_input" value={CommentTitle} onChange={(e)=>{

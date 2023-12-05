@@ -108,7 +108,7 @@ textarea.detail_comment_textarea {
   margin-left: auto;
   margin-right: auto;
   margin-top: 5px;
-  height: 450px;
+  height: 480px;
   display: flex;
   background-color: white;
   border-radius: 10px;
@@ -126,6 +126,7 @@ textarea.detail_comment_textarea {
   flex-direction: column;
   background-color: white;
   border-radius: 10px;
+  padding-bottom: 10px;
 }
 
 .detail_rate_info_container, .detail_carousel_container {
@@ -209,15 +210,18 @@ textarea.detail_comment_textarea {
 @media (max-width: 1300px) {
   .detail_intro_container, .detail_comment_container {
     margin-top: 15px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
   }
   .detail_pic_rate_container {
     flex-direction: column !important;
     height: auto !important;
+    padding-bottom: 15px !important;
   }
   .detail_pic_rate_container .detail_carousel_container {
     height: auto !important;
-    width: 90% !important;
-    margin: 5px auto 0 auto !important;
+    width: 75% !important;
+    margin: 5px auto 15px auto !important;
     max-width: 600px !important;
   }
   .detail_pic_rate_container .detail_rate_info_container {
@@ -226,11 +230,14 @@ textarea.detail_comment_textarea {
   }
 }
 @media (max-width: 800px) {
+  .detail_pagination_container ul {
+    height: 25px;
+  }
   .detail_breadcrumb_container, .detail_pic_rate_container, .detail_intro_container, .detail_comment_container {
     width: 98% !important;
   }
   .detail_intro_container, .detail_comment_container {
-    margin-top: 5px !important;
+    margin-top: 15px !important;
   }
   .detail_breadcrumb_container {
     height: 23px !important;
@@ -411,7 +418,7 @@ textarea.detail_comment_textarea {
   height: auto;
   max-height: 140px;
   width: 90%;
-  margin: 0.5% auto 1% auto;
+  margin: 0.5% auto 10px auto;
   display: flex;
   flex-direction: column;
 }
@@ -421,7 +428,7 @@ textarea.detail_comment_textarea {
   max-height: 250px;
   height: auto;
   width: 90%;
-  margin: 1.5% auto 0.5% auto;
+  margin: 1.5% auto 10px auto;
   display: flex;
   flex-direction: column;
 }
@@ -439,9 +446,9 @@ textarea.detail_comment_textarea {
 
 .detail_comment_input {
   position: relative;
-  padding: 5px 10px 10px;
+  padding: 12px 10px 10px;
   width: 90%;
-  height: 200px;
+  height: 225px;
   margin: 5px auto 0.5% auto;
   display: flex;
   flex-direction: row;
@@ -532,7 +539,7 @@ textarea.detail_comment_textarea {
 
 textarea.detail_comment_textarea_title {
   padding: 5px;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
   height: 35px;
   width: 100%;
 }
@@ -571,8 +578,8 @@ textarea.detail_comment_textarea_title {
 
 @media (max-width: 1300px) {
   .detail_comment_input {
-    height: 300px !important;
-    padding: 5px !important;
+    height: 325px !important;
+    padding: 10px !important;
     flex-direction: column !important;
   }
   .detail_comment_input_rate_button_container {
@@ -597,7 +604,7 @@ textarea.detail_comment_textarea_title {
 }
 @media (max-width: 800px) {
   .detail_comment_input {
-    height: 250px !important;
+    height: 275px !important;
   }
   .list-group-item.d-flex.justify-content-between.align-items-center {
     padding: 1px !important;
@@ -678,10 +685,58 @@ textarea.detail_comment_textarea_title {
   margin-inline-end: 4px;
 }
 
-.info-show .anticon-star {
-  font-size: 24px;
+.Comment-Star .ant-rate-star.ant-rate-star-full {
+  margin-inline-end: 4px;
 }
 
+.Comment-Star .ant-rate-star.ant-rate-star-half {
+  margin-inline-end: 4px;
+}
+
+.Comment-Star .ant-rate-star.ant-rate-star-zero {
+  margin-inline-end: 4px;
+}
+
+.anticon.anticon-star {
+  margin-bottom: 4px;
+}
+
+.ant-rate.Comment-Star {
+  display: flex;
+}
+
+@media (max-width: 1300px) {
+  .anticon.anticon-star {
+    margin-bottom: 5px;
+  }
+  .info-show .anticon-star {
+    font-size: 20px !important;
+  }
+  .Comment-Star .anticon-star {
+    font-size: 18px !important;
+  }
+  .custom-comment-star .anticon-star {
+    font-size: 20px !important;
+    margin-right: 3px !important;
+  }
+}
+@media (max-width: 600px) {
+  .anticon.anticon-star {
+    margin-bottom: 6px;
+  }
+  .Comment-Star .anticon-star {
+    font-size: 14px !important;
+  }
+  .Comment-Star .ant-rate-star.ant-rate-star-full {
+    margin-inline-end: 1px !important;
+  }
+  .Comment-Star .ant-rate-star.ant-rate-star-half {
+    margin-inline-end: 1px !important;
+  }
+  .Comment-Star .ant-rate-star.ant-rate-star-zero {
+    margin-inline-end: 1px !important;
+  }
+}
 .detail_main_container, div.detail_body {
   padding: 0;
   margin: 0;
