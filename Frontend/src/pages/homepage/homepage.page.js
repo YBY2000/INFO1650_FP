@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import SearchBar from '../../components/search-bar/search-bar.component';
 import Cards from '../../components/card-list/card-list.component';
+import SearchBar from '../../components/search-bar/search-bar.component';
 import "./homepage.style.css"
 
 class Homepage extends Component {
@@ -45,8 +45,7 @@ class Homepage extends Component {
 
         return (
             <div className='App'>
-                {/* <SearchBar onChangeHandler={onSearchChange} /> */}
-                {/* <CardList attractions={filteredAttractions} /> */}
+                <SearchBar onChangeHandler={onSearchChange} />
                 <Cards attractions={filteredAttractions} />
             </div>
         );

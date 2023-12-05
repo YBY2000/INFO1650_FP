@@ -13,6 +13,11 @@ class Cards extends Component {
         }
     }
 
+    pageSwitch = (attractionId) => {
+      // Replace with your page switching logic
+      window.location.href = '/detail?id=' + attractionId;
+    };
+
     render() {
         const { attractions } = this.props;
         const { getImg } = this;

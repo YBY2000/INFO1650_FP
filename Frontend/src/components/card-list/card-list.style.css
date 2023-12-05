@@ -1,7 +1,7 @@
 
   .card-list {
-    width: 75vw;
-    margin: 0 auto;
+    width: 1300px;
+    margin: 10px auto;
     display: grid;
     grid-template-columns:repeat(3, 1fr);
     grid-gap: 50px;
@@ -62,4 +62,22 @@
     padding: 20px;
     position: relative;
     top: -25px;
+  }
+  
+  @media only screen and (max-width: 1350px) {
+    .card-list {
+      width: 850px;
+      margin: 10px auto;
+      display: grid;
+      grid-template-columns:repeat(2, 1fr);
+      grid-gap: 50px;
+    }
+  }
+  @media only screen and (max-width: 850px) {
+    .card-list {
+      width: 400px;
+      margin: 10px auto;
+      display: grid;
+      grid-template-columns:repeat(1, 1fr);
+    }
   }

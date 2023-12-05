@@ -1,8 +1,17 @@
-.search-box {
-    border: none;
-    outline: none;
-    padding: 10px;
-    width: 150px;
-    line-height: 30px;
-    margin-bottom: 30px;
+.search-container {
+    width: 1300px;
+    margin: 20px auto;
+}
+  
+@media only screen and (max-width: 1350px) {
+    .search-container {
+        width: 850px;
+        margin: 20px auto;
+    }
+}
+@media only screen and (max-width: 850px) {
+.search-container {
+    width: 400px;
+    margin: 20px auto;
+}
 }
