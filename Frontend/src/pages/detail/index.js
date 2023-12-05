@@ -33,7 +33,7 @@ const Detail = () => {
     const [startIndex,SetstartIndex]=useState(0);
     const [Predisable,setPrevdisable]=useState(true);
     const [Nextdisable,setNextdisable]=useState(true);
-    const [CommentStar,SetCommentStar]=useState(1);
+    const [CommentStar,SetCommentStar]=useState(5);
 
     const fetchData = async () => {
         const attrData = await requestAttraction();
@@ -467,7 +467,7 @@ const Detail = () => {
                         </div>
                         <div className="detail_comment_input_rate_button_container">
                             <div className="detail_input_start_container">
-                                <Rate onChange={handleRateChange} allowHalf  allowClear={false} defaultValue={5} className="custom-comment-star"/>
+                                <Rate onChange={handleRateChange} allowHalf allowClear={false} defaultValue={CommentStar} className="custom-comment-star"/>
                             </div>
                             <button
                                 type="button"
