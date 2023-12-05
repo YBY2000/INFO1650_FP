@@ -1,11 +1,21 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './card-list.style.css'; // Import the CSS file for styling
 import { Spinner, Placeholder } from 'react-bootstrap';
 
 
-class Cards extends Component {
+const Cards = ({ attractions }) => {
+    const [showContent, setShowContent] = useState(false);
 
-    getImg(attractions) {
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setShowContent(true);
+      }, 1500);
+  
+      // Clean up the timer when the component unmounts
+      return () => clearTimeout(timer);
+    }, []);
+
+    const getImg = (attractions) => {
         if (Array.isArray(attractions.image)) {
             return attractions.image[0];
         }
@@ -14,20 +24,17 @@ class Cards extends Component {
         }
     }
 
-    pageSwitch = (attractionId) => {
+    const pageSwitch = (attractionId) => {
         // Replace with your page switching logic
         window.location.href = '/detail?id=' + attractionId;
     };
 
-    render() {
-        const { attractions } = this.props;
-        const { getImg } = this;
         return (
             <>
                 <div className='card-list'>
                     {attractions.map((attractions) => (
                         <div>
-                            {/* {isLazyLoading ? (
+                            {showContent ? (
                                 <div className='card-container' key={attractions.id}>
                                     <img className="card-img" alt={`attraction ${attractions.name}`} src={getImg(attractions)} />
                                     <div class="card-intro-area">
@@ -48,16 +55,7 @@ class Cards extends Component {
                                         </Placeholder>
                                     </div>
                                 </div>
-                            )} */}
-
-
-                            <div className='card-container' key={attractions.id}>
-                                <img className="card-img" alt={`attraction ${attractions.name}`} src={getImg(attractions)} />
-                                <div class="card-intro-area">
-                                    <p className='card-title'>{attractions.name}</p>
-                                    <p className='card-text'>{attractions.description}</p>
-                                </div>
-                            </div>
+                            )}
 
                         </div>
 
@@ -66,7 +64,6 @@ class Cards extends Component {
             </>
 
         );
-    }
 
 }
 
