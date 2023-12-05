@@ -26,13 +26,16 @@ const useRequest = (url, options = {}) => {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const errorBody = await response.json();
+                const error = new Error(errorBody.message || 'Network response was not ok');
+                error.status = response.status; // 添加状态码到错误对象
+                throw error;
             }
-
             const result = await response.json();
             setIsLoading(false);
             return result; // Return the data directly
         } catch (err) {
+            console.log(err)
             setError(err);
             setIsLoading(false);
             throw err; // Rethrow the error so it can be caught by the caller

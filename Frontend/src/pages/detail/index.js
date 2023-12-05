@@ -1,64 +1,65 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './Detail-SASS/detail_main.css';
 import useRequest from '../../hooks/useRequest';
 import getFakeComment from "./fakeComment";
 import getFakeAttraction from "./fakeAttraction";
-import {Link, useLocation} from 'react-router-dom';
-import {Rate} from 'antd';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Rate } from 'antd';
 import 'antd/dist/antd.js'
 import { Empty } from 'antd';
 import { Breadcrumb } from 'antd';
-import { HomeOutlined} from '@ant-design/icons';
-const fake_attraction=getFakeAttraction();
-const fake_comment=getFakeComment();
+import { HomeOutlined } from '@ant-design/icons';
+const fake_attraction = getFakeAttraction();
+const fake_comment = getFakeComment();
 const style = {
     '--bs-breadcrumb-divider': '>', // 直接设置 CSS 变量
 };
 
 
 const Detail = () => {
-    const [token,Settoken]=useState(null);
-    const regex = /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/
+    const [token, Settoken] = useState(null);
+    const regex = /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})/;
+    const navigate = useNavigate();
     //获取attraction id
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
     const { request: requestComments, isLoading: isLoadingComments, error: errorComments } = useRequest(`/comment?attraction_id=${id}`, { method: 'GET' });
     const { request: requestAttraction, isLoading: isLoadingAttraction, error: errorAttraction } = useRequest(`/attraction?id=${id}`, { method: 'GET' });
-    const { request: postComments, isLoadingLisLoadingPost, error: errorPost}=useRequest('/comment/add',{method:'POST',headers: {'Authorization': `Bearer ${token}`}});
-    const [CommentTitle,SetCommentTitle]=useState('');
-    const [CommentBody,SetCommentBody]=useState('');
-    const [Loading,setLoading]=useState(true);
+    const { request: postComments, isLoadingLisLoadingPost, error: errorPost } = useRequest('/comment/add', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+    const [CommentTitle, SetCommentTitle] = useState('');
+    const [CommentBody, SetCommentBody] = useState('');
+    const [Loading, setLoading] = useState(true);
     const [AttractionData, setAttractionData] = useState(null);
-    const [CommentData,SetCommentData]=useState(null);
-    const [commentNum,SetcommentNum]=useState(0);
-    const [startIndex,SetstartIndex]=useState(0);
-    const [Predisable,setPrevdisable]=useState(true);
-    const [Nextdisable,setNextdisable]=useState(true);
-    const [CommentStar,SetCommentStar]=useState(5);
+    const [CommentData, SetCommentData] = useState(null);
+    const [commentNum, SetcommentNum] = useState(0);
+    const [startIndex, SetstartIndex] = useState(0);
+    const [Predisable, setPrevdisable] = useState(true);
+    const [Nextdisable, setNextdisable] = useState(true);
+    const [CommentStar, SetCommentStar] = useState(5);
 
     const fetchData = async () => {
         const attrData = await requestAttraction();
-        const commentData=await requestComments();
+        const commentData = await requestComments();
         if (!errorComments && !errorAttraction) {
             setAttractionData(attrData.data.attraction);
-            SetCommentData(commentData.data.comments.filter(comment=>comment.status===1));
-            SetcommentNum(commentData.data.comments.filter(comment=>comment.status===1).length);
+            SetCommentData(commentData.data.comments.filter(comment => comment.status === 1));
+            SetcommentNum(commentData.data.comments.filter(comment => comment.status === 1).length);
             SetstartIndex(0);
             setPrevdisable(true);
-            if (commentData.data.comments.length<=4){
+            if (commentData.data.comments.length <= 4) {
                 setNextdisable(true);
             }
-            else{
+            else {
                 setNextdisable(false);
             }
         }
     };
-    useEffect(()=>{
-        console.log(startIndex);
-    },[startIndex]);
     useEffect(() => {
-        setTimeout(()=> {
+        console.log(startIndex);
+    }, [startIndex]);
+    useEffect(() => {
+        setTimeout(() => {
             setLoading(false);
         }, 2000);
         const token = localStorage.getItem('token');
@@ -67,50 +68,50 @@ const Detail = () => {
         }
         fetchData();
     }, []);
-    useEffect(()=>{
-        if (startIndex===0){
+    useEffect(() => {
+        if (startIndex === 0) {
             setPrevdisable(true);
         }
-        else{
+        else {
             setPrevdisable(false);
         }
-        if (startIndex+4>=commentNum){
+        if (startIndex + 4 >= commentNum) {
             setNextdisable(true);
         }
-        else{
+        else {
             setNextdisable(false);
         }
-    },[startIndex,commentNum])
-    if (!AttractionData || ! CommentData) {
+    }, [startIndex, commentNum])
+    if (!AttractionData || !CommentData) {
         return <div>Loading...</div>; // 在数据加载时显示加载指示
     }
-    const generateIndicatorButton=()=>{
-        const num=AttractionData.image.length;
+    const generateIndicatorButton = () => {
+        const num = AttractionData.image.length;
         const divs = [];
         for (let i = 0; i < num; i++) {
             divs.push(
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to={i.toString()} className={i=== 0 ? 'active' : ''}
-                        aria-current="true" aria-label={`Slide ${i + 1}`}></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to={i.toString()} className={i === 0 ? 'active' : ''}
+                    aria-current="true" aria-label={`Slide ${i + 1}`}></button>
             );
         }
 
         return divs;
     }
-    const generateCarousItem=()=>{
-        const num=AttractionData.image.length;
+    const generateCarousItem = () => {
+        const num = AttractionData.image.length;
         const divs = [];
         for (let i = 0; i < num; i++) {
             divs.push(
                 <div className={`carousel-item ${i === 0 ? 'active' : ''}`} >
-                    <img src={AttractionData.image[i]} className="d-block w-100" alt="..."/>
+                    <img src={AttractionData.image[i]} className="d-block w-100" alt="..." />
                 </div>
             );
         }
         return divs
     }
-    const generateRateInfoList=()=>{
-        const attraction=AttractionData
-        const divs=[]
+    const generateRateInfoList = () => {
+        const attraction = AttractionData
+        const divs = []
         divs.push(
             <li className="list-group-item d-flex justify-content-between align-items-center">
                 <h1 style={{ fontWeight: 'bold' }} className="title">{attraction.name}</h1>
@@ -119,7 +120,7 @@ const Detail = () => {
         divs.push(
             <li className="list-group-item d-flex justify-content-between align-items-center">
                 <div className="detail_rating" style={{ fontSize: '35px' }}>
-                    <Rate className="info-show" disabled allowHalf value={attraction.rating}/>
+                    <Rate className="info-show" disabled allowHalf value={attraction.rating} />
                 </div>
                 <div className="detail_score">
                     <h2><span className='detail_yellow_bold'>{attraction.rating}</span><span style={{ fontSize: '20px' }}>/5.0</span>
@@ -159,61 +160,23 @@ const Detail = () => {
         )
         return divs;
     }
-    const generateComment=()=>{
-        console.log("generate Comment");
-        if(Loading===true){
-            return (<div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>);
-        }
-        else{
-            return(
-                <div className="detail_comment_contents" >
-                    {generateSingleComment(startIndex)}
-                </div>
-            )
-        }
 
-
+    const generateDate = (s) => {
+        const match = s.match(regex);
+        const formattedTime = match ? `${match[1]} ${match[2]}` : '';
+        return (
+            <span className="detail_comment_rate_time" style={{ marginLeft: '10px' }}>
+                {formattedTime}
+            </span>
+        );
     }
-
-    const generateSwitchPage=()=>{
-        const divs=[];
-        const totalpage=Math.ceil(commentNum/4);
-        for (let i=0;i<totalpage;i++){
-            divs.push(
-                <li className={`page-item ${startIndex >=i*4 && startIndex<= i*4+3? 'current' : ''}`}>
-                    <a
-                        className="page-link"
-                        href="#"
-                        onClick={(e) => {
-                            e.preventDefault();
-
-                            function handlePagnitionClick(i) {
-                                SetstartIndex(i*4);
-                            }
-
-                            handlePagnitionClick(i);
-                        }}
-                    >
-                        {i+1}
-                    </a>
-                </li>
-            )
+    const generateSingleComment = () => {
+        if (commentNum === 0) {
+            return <Empty />
         }
-        return divs;
-    }
-    const generateSingleComment=(index)=>{
-        if(commentNum===0){
-            return (
-                <Empty />
-            )
-        }
-        const divs=[];
-        for(let i=index;i<=index+3;i++){
-            if (i<commentNum){
-                let comment=CommentData[i];
-                divs.push(
+        return CommentData && CommentData.length > 0 && CommentData.map((comment, index) => {
+            if (index <= startIndex + 3) {
+                return (
                     <div className="detail_comments_item_container" >
                         <div className="detail_comment_c1">
                             <div className="detail_comment_icon">
@@ -222,14 +185,14 @@ const Detail = () => {
                                     style={{ height: '80%', width: '80%', margin: '10%' }}
                                 />
                             </div>
-                            <div className="detail_comment_name" style={{marginLeft: '8%'}}>
+                            <div className="detail_comment_name" style={{ marginLeft: '8%' }}>
                                 {comment.reviewer_name}
                             </div>
                         </div>
                         <div className="detail_comment_c2">
                             <h4 className="detail_comment_title">{comment.review_title}</h4>
                             <div className="detail_comment_rate">
-                                <Rate className="Comment-Star" disabled allowHalf value={comment.star_rating}/>
+                                <Rate className="Comment-Star" disabled allowHalf value={comment.star_rating} />
                                 {generateDate(comment.review_time)}
                             </div>
                             <div className="detail_comment_text">
@@ -241,24 +204,47 @@ const Detail = () => {
                     </div>
                 )
             }
+        })
+    }
+    const generateComment = Loading ?
+        <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </div> :
+        (<div className="detail_comment_contents" >
+            {generateSingleComment()}
+        </div>)
+    const generateSwitchPage = () => {
+        const divs = [];
+        const totalpage = Math.ceil(commentNum / 4);
+        for (let i = 0; i < totalpage; i++) {
+            divs.push(
+                <li className={`page-item ${startIndex >= i * 4 && startIndex <= i * 4 + 3 ? 'current' : ''}`}>
+                    <a
+                        className="page-link"
+                        href="#"
+                        onClick={(e) => {
+                            e.preventDefault();
+
+                            function handlePagnitionClick(i) {
+                                SetstartIndex(i * 4);
+                            }
+
+                            handlePagnitionClick(i);
+                        }}
+                    >
+                        {i + 1}
+                    </a>
+                </li>
+            )
         }
-        return divs
+        return divs;
     }
-    const generateDate=(s)=>{
-        const match = s.match(regex);
-        const formattedTime = match ? `${match[1]} ${match[2]}` : '';
-        return(
-            <span className="detail_comment_rate_time" style={{marginLeft:'10px'}}>
-                {formattedTime}
-            </span>
-        );
-    }
-    const handleRateChange=(newvalue)=>{
+    const handleRateChange = (newvalue) => {
         SetCommentStar(newvalue);
     }
-    const handleSubmit=async ()=>{
+    const handleSubmit = async () => {
         const token = localStorage.getItem('token');
-        if (!token){
+        if (!token) {
             alert("Please Login");
             Settoken(null);
             SetCommentTitle('');
@@ -279,17 +265,16 @@ const Detail = () => {
             await fetchData();
             // 处理响应数据
         } catch (err) {
-            alert('Error:'+err);
-            console.error('Error:', err);
-            // 处理错误
+            alert(err);
+            navigate('/login');
         }
     }
-    const generateSwitchButton=()=>{
-        if (commentNum===0){
+    const generateSwitchButton = () => {
+        if (commentNum === 0) {
             return (<div></div>)
         }
-        else{
-            return(
+        else {
+            return (
                 <div className="detail_pagination_container">
                     <nav aria-label="Page navigation example">
                         <ul className="pagination justify-content-center">
@@ -302,7 +287,7 @@ const Detail = () => {
                                         e.preventDefault();
 
                                         function handlePagnitionClick(startIndex) {
-                                            SetstartIndex(startIndex-4);
+                                            SetstartIndex(startIndex - 4);
                                         }
 
                                         handlePagnitionClick(startIndex);
@@ -320,7 +305,7 @@ const Detail = () => {
                                         e.preventDefault();
 
                                         function handlePagnitionClick(startIndex) {
-                                            SetstartIndex(startIndex+4);
+                                            SetstartIndex(startIndex + 4);
                                         }
 
                                         handlePagnitionClick(startIndex);
@@ -363,13 +348,13 @@ const Detail = () => {
                             </div>
                             <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
                                 data-bs-slide="prev">
-                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Previous</span>
+                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Previous</span>
                             </button>
                             <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
                                 data-bs-slide="next">
-                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Next</span>
+                                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Next</span>
                             </button>
                         </div>
                     </div>
@@ -386,8 +371,8 @@ const Detail = () => {
                             <div className="accordion-item">
                                 <h2 className="accordion-header">
                                     <button className="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                                            aria-controls="panelsStayOpen-collapseOne">
+                                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                        aria-controls="panelsStayOpen-collapseOne">
                                         Introduction
                                     </button>
                                 </h2>
@@ -404,8 +389,8 @@ const Detail = () => {
                             <div className="accordion-item">
                                 <h2 className="accordion-header">
                                     <button className="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true"
-                                            aria-controls="panelsStayOpen-collapseTwo">
+                                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true"
+                                        aria-controls="panelsStayOpen-collapseTwo">
                                         Open Time
                                     </button>
                                 </h2>
@@ -422,8 +407,8 @@ const Detail = () => {
                             <div className="accordion-item">
                                 <h2 className="accordion-header">
                                     <button className="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true"
-                                            aria-controls="panelsStayOpen-collapseThree">
+                                        data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true"
+                                        aria-controls="panelsStayOpen-collapseThree">
                                         Tips
                                     </button>
                                 </h2>
@@ -438,7 +423,7 @@ const Detail = () => {
                 </div>
                 <div className="detail_comment_container" id="comments">
                     <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel"
-                         aria-hidden="true">
+                        aria-hidden="true">
                         <div className="modal-dialog">
                             <div className="modal-content">
                                 <div className="modal-header">
@@ -456,24 +441,24 @@ const Detail = () => {
                         </div>
                     </div>
                     <div className="detail_comment_head">Comments</div>
-                    {generateComment()}
+                    {generateComment}
                     {generateSwitchButton()}
                     <div className="detail_comment_input">
                         <div className="detail_comment_input_text_container">
-                            <textarea style={{resize:"none"}} className="detail_comment_textarea_title" name="comment_input" value={CommentTitle} onChange={(e)=>{
+                            <textarea style={{ resize: "none" }} className="detail_comment_textarea_title" name="comment_input" value={CommentTitle} onChange={(e) => {
                                 SetCommentTitle(e.target.value)
                             }}
-                              placeholder="Comment Title">
+                                placeholder="Comment Title">
                             </textarea>
-                            <textarea style={{resize:"none"}} className="detail_comment_textarea" name="comment_input" value={CommentBody} onChange={(e)=>{
+                            <textarea style={{ resize: "none" }} className="detail_comment_textarea" name="comment_input" value={CommentBody} onChange={(e) => {
                                 SetCommentBody(e.target.value)
                             }}
-                                      placeholder="Leave your comments here">
+                                placeholder="Leave your comments here">
                             </textarea>
                         </div>
                         <div className="detail_comment_input_rate_button_container">
                             <div className="detail_input_start_container">
-                                <Rate onChange={handleRateChange} allowHalf allowClear={false} defaultValue={CommentStar} className="custom-comment-star"/>
+                                <Rate onChange={handleRateChange} allowHalf allowClear={false} defaultValue={CommentStar} className="custom-comment-star" />
                             </div>
                             <button
                                 type="button"
