@@ -9,20 +9,13 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-  const handleLogin = async (values) => {
+  const { request: loginRequest } = useRequest('/auth/login', {method: 'POST'})
+  const handleLogin = async () => {
+    const values = await form.validateFields();
     const { email, password } = values;
     const requestBody = { email, password };
-
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      const data = await response.json();
+      const data = await loginRequest(requestBody)
       if (data.success) {
         messageApi.success('Login successful!');
         localStorage.setItem('token', data.data.token);
@@ -30,7 +23,7 @@ const LoginPage = () => {
         localStorage.setItem('fullName', data.data.user.fullName);
         setTimeout(() => {
           navigate('/home');
-        }, 3000); // 3000毫秒后跳转
+        }, 3000);
       } else {
         messageApi.error(data.message || 'Login failed');
       }
@@ -72,7 +65,6 @@ const LoginPage = () => {
             wrapperCol={{ span: 16 }}
             style={{ maxWidth: 600, marginTop: 50 }}
             initialValues={{ remember: true }}
-            onFinish={handleLogin}
             autoComplete="off"
           >
             <Form.Item
@@ -100,7 +92,7 @@ const LoginPage = () => {
             </Button>
             <Button
               type='primary'
-              htmlType="submit"
+              onClick={handleLogin}
             >
               Log in
             </Button>
