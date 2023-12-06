@@ -31,6 +31,7 @@ const RegistrationPage = () => {
     const navigate = useNavigate();
     const { isAuthenticated, email } = useAuth();
     const { request } = useRequest('/user', { method: 'POST'})
+    const { request: updateUser } = useRequest('/user/edit', { method: 'PUT'})
     const interestsOptions = [
         { label: 'City views', value: 0 },
         { label: 'Natural views', value: 1 },
@@ -87,11 +88,6 @@ const RegistrationPage = () => {
 
         fetchCountries();
     }, []);
-    console.log()
-
-    useEffect(() => {
-
-    })
     const handleUploadChange = async ({ file, fileList: newFileList }) => {
         setFileList(newFileList);
 
@@ -109,23 +105,13 @@ const RegistrationPage = () => {
     const handleSubmit = async (values) => {
         console.log(values); // 这里会打印出所有表单字段的值
         try {
-            const submissionData = { ...values, avatar: 'https://files.oaiusercontent.com/file-gGpV243etTouWHMtLPAOvo7I?se=2023-12-06T22%3A01%3A54Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D35750207-b47b-4a55-aed5-d6eea15f3f26.webp&sig=KxkmfgzOnrHp8ovO/sdL4XCFPmu5hSFz6o643tDGP0w%3D' };
-            const response = await fetch('http://localhost:3000/api/user/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(submissionData)
-            });
-
-            if (!response.ok) {
+            const submissionData = { ...values, email, avatar: 'https://files.oaiusercontent.com/file-gGpV243etTouWHMtLPAOvo7I?se=2023-12-06T22%3A01%3A54Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D35750207-b47b-4a55-aed5-d6eea15f3f26.webp&sig=KxkmfgzOnrHp8ovO/sdL4XCFPmu5hSFz6o643tDGP0w%3D' };
+            const response = await updateUser(submissionData);
+            if (!response.success) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
-            const data = await response.json();
-            console.log(data);
-            message.success('Registration successful');
-            navigate('/login');
+            message.success('Update successful');
+            navigate('/');
         } catch (error) {
             console.error('error in submitting form', error);
             message.error('Error submitting form');
