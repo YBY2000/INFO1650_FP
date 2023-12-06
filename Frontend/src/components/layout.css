@@ -66,6 +66,8 @@ body {
 
 .search-bar {
     margin-right: auto;
+    width: 80%;
+    max-width: 500px;
 }
 
 .nav-toggle {
