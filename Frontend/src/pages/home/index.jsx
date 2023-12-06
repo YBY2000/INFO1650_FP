@@ -1,55 +1,46 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Cards from '../../components/cardList';
 import SearchBar from '../../components/search-bar/search-bar.component';
-import "./homepage.style.css"
+import './homepage.style.css';
+import useRequest from '../../hooks/useRequest';
 
-class Home extends Component {
-    constructor() {
-        super();
+const Home = () => {
+    const [attractions, setAttractions] = useState([]);
+    const [searchField, setSearchField] = useState('');
+    const { request: requestAttraction, isLoading: isLoadingAttraction, error: errorAttraction } = useRequest(`/attraction/getAll`, { method: 'GET' });
 
-        this.state = {
-            attractions: [],
-            searchField: ''
-        };
-    }
+    const fetchData = async () => {
+        try {
+            const attrData = await requestAttraction();
+            if (!errorAttraction) {
+                console.log(attrData);
+                setAttractions(attrData.data.attractions);
+            }
+        } catch (error) {
+            console.error('Error fetching attraction data:', error);
+        }
+    };
 
-    componentDidMount() {
-        fetch('https://raw.githubusercontent.com/YBY2000/INFO1650_FP/main/data/INFO6150.attractions.json')
-            .then((response) => response.json())
-            .then((data) => {
-                this.setState(
-                    () => {
-                        return { attractions: data }
-                    }
-                )
-            })
-            .catch((error) => {
-                console.error("Error fetching attraction data:", error);
-            });
-    }
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-    onSearchChange = e => {
-        const searchField = e.target.value.toLocaleLowerCase();
-        this.setState(() => {
-            return { searchField };
-        })
-    }
+    const onSearchChange = (e) => {
+        const searchField = e.target.value.toLowerCase();
+        setSearchField(searchField);
+    };
 
-    render() {
-        const { attractions, searchField } = this.state;
-        const { onSearchChange } = this;
+    // Check if attractions is undefined before calling filter
+    const filteredAttractions = attractions && attractions.filter((attraction) =>
+        attraction.name.toLowerCase().includes(searchField)
+    );
 
-        const filteredAttractions = attractions.filter((attraction) => {
-            return attraction.name.toLocaleLowerCase().includes(searchField);
-        });
-
-        return (
-            <div className='homepageApp'>
-                <SearchBar onChangeHandler={onSearchChange} />
-                <Cards attractions={filteredAttractions} />
-            </div>
-        );
-    }
-}
+    return (
+        <div className="homepageApp">
+            <SearchBar onChangeHandler={onSearchChange} />
+            <Cards attractions={filteredAttractions || []} />
+        </div>
+    );
+};
 
 export default Home;
