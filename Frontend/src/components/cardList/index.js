@@ -31,18 +31,18 @@ const Cards = ({ attractions }) => {
         return (
             <>
                 <div className='card-list'>
-                    {attractions.map((attractions, index) => (
+                    {attractions.map((attraction, index) => (
                         <div key={index}>
                             {showContent ? (
-                                <div className='card-container' key={attractions.id} onClick={() => { pageSwitch(attractions.id) }}>
-                                    <img className="card-img" alt={`attraction ${attractions.name}`} src={getImg(attractions)} />
+                                <div className='card-container' key={attraction.id} onClick={() => { pageSwitch(attraction.id) }}>
+                                    <img className="card-img" alt={`attraction ${attraction.name}`} src={getImg(attraction)} />
                                     <div className="card-intro-area">
-                                        <p className='card-title'>{attractions.name}</p>
-                                        <p className='card-text'>{attractions.description}</p>
+                                        <p className='card-title'>{attraction.name}</p>
+                                        <p className='card-text'>{attraction.description}</p>
                                     </div>
                                 </div>
                             ) : (
-                                <div className='card-container' key={attractions.id}>
+                                <div className='card-container' key={attraction.id}>
                                     <div className="card-img"><Spinner animation="grow" /></div>
                                     <div className="card-intro-area">
                                         <Placeholder className='card-title' animation="glow">
