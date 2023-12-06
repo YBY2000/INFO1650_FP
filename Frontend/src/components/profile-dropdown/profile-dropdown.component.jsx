@@ -10,41 +10,56 @@ import useAuth from '../../hooks/useAuth';
 
 const ProfileDropdown = () => {
     const navigate = useNavigate();
-    const pageSwitch = () => {
-        navigate(`/edit`);
+    const pageSwitch = (path) => {
+        navigate(`/${path}`);
     };
+
     const { isAuthenticated, avatar, username, email, userType } = useAuth();
-    // console.log(avatar);
-    // console.log(username)
-    // console.log(email)
-    // console.log(userType)
+
+    const handleLogout = () => {
+        
+    };
+
+
+
     return (
         <div className='profile-container'>
             <Dropdown className='dropdown-box'>
                 <Dropdown.Toggle variant="light" id="profile-dropdown">
                     <Badge count={100} overflowCount={99}>
-                        <Avatar src={process.env.PUBLIC_URL + '/profile.jpg'} alt="avatar" width="50" height="50" shape="circle" size="large" />
+                        <Avatar src={avatar} alt="avatar" width="50" height="50" shape="circle" size="large" />
                     </Badge>
                     <span className="profile-name">
-                        {/* {user.username} */}
-                        username
+                        {username}
                     </span>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className='dropdwon-menu' placement="bottom">
                     <Dropdown.Item href="#action/3.2">
-                        {/* {user.email} */}
-                        <p className='profile-info'><h5>Username</h5></p>
-                        <p className='profile-info'><b><i>name@email.com</i></b></p>
-                        
+                        <p className='profile-info'><h5>{username}</h5></p>
+                        <p className='profile-info'><b><i>{email}</i></b></p>
+
                     </Dropdown.Item>
                     <Dropdown.Divider />
 
-                    <Dropdown.Item>
-                        <EditOutlined width="14" height="14" onClick={() => { pageSwitch() }} className='icon' />Edit Profile
-                    </Dropdown.Item>
-                    <Dropdown.Divider />
 
+
+                    {(userType === 1) ? (
+                        <div>
+                            <Dropdown.Item>
+                                <EditOutlined width="14" height="14" className='icon' onClick={() => { pageSwitch('userComments') }}/>Manage Comment
+                            </Dropdown.Item>
+                            <Dropdown.Item>
+                                <EditOutlined width="14" height="14" className='icon' onClick={() => { pageSwitch('userManagement') }}/>Manage User
+                            </Dropdown.Item>
+                        </div>
+                    ) : (
+                        <Dropdown.Item>
+                            <EditOutlined width="14" height="14" className='icon' />Edit Profile
+                        </Dropdown.Item>
+                    )}
+
+                    <Dropdown.Divider />
                     <Dropdown.Item>
                         <LogoutOutlined width="14" height="14" className='icon' />LOGOUT
                     </Dropdown.Item>
