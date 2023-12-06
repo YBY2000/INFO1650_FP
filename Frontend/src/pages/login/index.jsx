@@ -21,6 +21,8 @@ const LoginPage = () => {
         localStorage.setItem('token', data.data.token);
         localStorage.setItem('avatar', data.data.user.avatar);
         localStorage.setItem('fullName', data.data.user.fullName);
+        localStorage.setItem('email', data.data.user.email);
+        localStorage.setItem('useType', data.data.user.userType);
         setTimeout(() => {
           navigate('/home');
         }, 3000);

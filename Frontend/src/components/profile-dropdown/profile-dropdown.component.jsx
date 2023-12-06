@@ -5,15 +5,19 @@ import './profile-dropdown.style.css'; // Import the CSS file for styling
 import { Badge, Avatar } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { EditOutlined, LogoutOutlined } from '@ant-design/icons';
+import useAuth from '../../hooks/useAuth';
 
 
-
-const ProfileDropdown = ({ user }) => {
+const ProfileDropdown = () => {
     const navigate = useNavigate();
     const pageSwitch = () => {
         navigate(`/edit`);
     };
-
+    const { isAuthenticated, avatar, username, email, userType } = useAuth();
+    // console.log(avatar);
+    // console.log(username)
+    // console.log(email)
+    // console.log(userType)
     return (
         <div className='profile-container'>
             <Dropdown className='dropdown-box'>
