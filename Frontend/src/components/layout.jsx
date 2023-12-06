@@ -11,6 +11,7 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = window.location.pathname;
+  const [token, setToken] = useState(null);
 
   const [isLoggedIn, setLoggedIn] = useState(false); // Replace with your actual authentication logic
   const { isAuthenticated, avatar, username, email, userType } = useAuth();
@@ -19,7 +20,9 @@ const Layout = ({ children }) => {
 
   // Use useEffect to handle side effects when the component mounts
   useEffect(() => {
-    if(isAuthenticated) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setToken(token);
       setLoggedIn(true);
     }
   }, []);

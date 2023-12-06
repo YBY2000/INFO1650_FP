@@ -4,7 +4,7 @@ import { Dropdown } from 'react-bootstrap';
 import './profile-dropdown.style.css'; // Import the CSS file for styling
 import { Badge, Avatar } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { EditOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UsergroupAddOutlined, CommentOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import useAuth from '../../hooks/useAuth';
 
 
@@ -17,7 +17,8 @@ const ProfileDropdown = () => {
     const { isAuthenticated, avatar, username, email, userType } = useAuth();
 
     const handleLogout = () => {
-        
+        localStorage.removeItem('token');
+        navigate('/login');
     };
 
 
@@ -50,18 +51,18 @@ const ProfileDropdown = () => {
                                 <EditOutlined width="14" height="14" className='icon' onClick={() => { pageSwitch('userComments') }}/>Manage Comment
                             </Dropdown.Item>
                             <Dropdown.Item>
-                                <EditOutlined width="14" height="14" className='icon' onClick={() => { pageSwitch('userManagement') }}/>Manage User
+                                <UsergroupAddOutlined width="14" height="14" className='icon' onClick={() => { pageSwitch('userManagement') }}/>Manage User
                             </Dropdown.Item>
                         </div>
                     ) : (
                         <Dropdown.Item>
-                            <EditOutlined width="14" height="14" className='icon' />Edit Profile
+                            <CommentOutlined width="14" height="14" className='icon' />Edit Profile
                         </Dropdown.Item>
                     )}
 
                     <Dropdown.Divider />
                     <Dropdown.Item>
-                        <LogoutOutlined width="14" height="14" className='icon' />LOGOUT
+                        <LogoutOutlined width="14" height="14" className='icon' onClick={handleLogout}/>LOGOUT
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
