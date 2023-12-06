@@ -44,7 +44,7 @@ class Homepage extends Component {
         });
 
         return (
-            <div className='App'>
+            <div className='homepageApp'>
                 <SearchBar onChangeHandler={onSearchChange} />
                 <Cards attractions={filteredAttractions} />
             </div>
