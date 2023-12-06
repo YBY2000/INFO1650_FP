@@ -83,6 +83,7 @@ exports.getUsersByFilter = async (req, res) => {
         }
         if (req.body.userType !== undefined && req.body.userType !== null && req.body.userType !== '') {
             query.userType = req.body.userType;
+
         }
         if (req.body.minAge) {
             query.age = { $gte: req.body.minAge };
@@ -92,10 +93,7 @@ exports.getUsersByFilter = async (req, res) => {
         }
 
         const users = await User.find(query, '-_id');
-        if (!users || users.length === 0) {
-            return res.error(404, 'No users found');
-        }
-        console.log(users);
+
         res.success({ users, total: users.length }, 'Users retrieved successfully');
     } catch (error) {
         res.error(500, 'Internal server error');
