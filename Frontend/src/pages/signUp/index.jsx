@@ -58,50 +58,24 @@ const RegistrationPage = () => {
     }, []);
 
 
-    const beforeUpload = (file) => {
-        const isImage = /\.(jpeg|jpg|png|gif)$/.test(file.name.toLowerCase());
-        if (!isImage) {
-            message.error('You can only upload image files!');
-        }
-        return isImage || Upload.LIST_IGNORE;
-    };
 
-    const handleUploadChange = async ({ fileList: newFileList }) => {
-        console.log('Upload onChange triggered');
+    const handleUploadChange = async ({ file, fileList: newFileList }) => {
         setFileList(newFileList);
 
+        // 获取最后一个文件对象，即最新上传的文件
         const latestFile = newFileList[newFileList.length - 1];
+
+        // 检查 latestFile 是否存在，并且具有 originFileObj 属性
         if (latestFile && latestFile.originFileObj) {
             try {
-                // 将文件对象转换为 Blob
-                const blob = new Blob([latestFile.originFileObj], { type: latestFile.originFileObj.type });
-                console.log(blob);
-
-                const formData = new FormData();
-                formData.append('file', blob);
-                for (let [key, value] of formData.entries()) {
-                    console.log(`${key}:`, value);
-                }
-
-                const response = await fetch('http://localhost:3000/api/upload', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to upload file');
-                }
-
-                // 处理上传成功的响应
-                const data = await response.json();
-
-                console.log('File uploaded successfully', data);
+                const base64 = await getBase64(latestFile.originFileObj);
+                console.log(base64);
+                form.setFieldsValue({ avatar: base64 });
             } catch (error) {
-                console.error('Error uploading file:', error);
+                console.error('Error reading file:', error);
             }
         }
     };
-
 
     // ...其他函数，例如 handleInputChange, handlePreview, handleChange...
 
@@ -109,8 +83,9 @@ const RegistrationPage = () => {
         console.log(values); // 这里会打印出所有表单字段的值
 
         try {
-            const submissionData = { ...values };
-            delete submissionData.avatar;
+            // const submissionData = { ...values };
+            // delete submissionData.avatar;
+            const submissionData = { ...values, avatar: 'https://p0.51img.ca/i/63ea5af74efb8:original.png' };
             const response = await fetch('http://localhost:3000/api/user/create', {
                 method: 'POST',
                 headers: {
@@ -173,7 +148,7 @@ const RegistrationPage = () => {
                     name="lastName"
                     rules={[{ required: true, pattern: /^[a-zA-Z ]{1,50}$/, message: 'Invalid last name' }]}
                 >
-                    <Input />
+                    <Input  />
                 </Form.Item>
                 <Form.Item
                     label="Gender"
@@ -209,7 +184,7 @@ const RegistrationPage = () => {
                         listType="picture-card"
                         fileList={fileList}
                         onChange={handleUploadChange}
-                        beforeUpload={beforeUpload}
+                        beforeUpload={() => false}
                     >
                         {fileList.length < 1 && <PlusOutlined />}
                     </Upload>
@@ -225,14 +200,14 @@ const RegistrationPage = () => {
                         return parseInt(event.target.value, 10); // 转换字符串为数字
                     }}
                 >
-                    <Input type="number" />
+                    <Input type="number"  />
                 </Form.Item>
-                <Form.Item
-                    label="Interests"
-                    name="interest"
-                    rules={[{ required: true, message: 'Please select at least one interest', type: 'array' }]}
+                <Form.Item 
+                label="Interests" 
+                name="interest"
+                rules={[{ required: true, message: 'Please select at least one interest', type: 'array' }]}
                 >
-                    <Checkbox.Group options={interestsOptions} />
+                    <Checkbox.Group options={interestsOptions}/>
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 4 }}>
                     <Button type="primary" htmlType="submit">
