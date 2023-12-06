@@ -82,7 +82,7 @@ const RegistrationPage = () => {
     const handleSubmit = async (values) => {
         console.log(values); // 这里会打印出所有表单字段的值
         try {
-            const submissionData = { ...values, avatar: 'https://files.oaiusercontent.com/file-gGpV243etTouWHMtLPAOvo7I?se=2023-12-06T22%3A01%3A54Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D35750207-b47b-4a55-aed5-d6eea15f3f26.webp&sig=KxkmfgzOnrHp8ovO/sdL4XCFPmu5hSFz6o643tDGP0w%3D' };
+            const submissionData = { ...values, avatar: 'https://resizing.flixster.com/xkP-QzPdNnU1Q8KQuBB6Q0YCeTU=/218x280/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/371287_v9_bc.jpg' };
             const response = await fetch('http://localhost:3000/api/user/create', {
                 method: 'POST',
                 headers: {
