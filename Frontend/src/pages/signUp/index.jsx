@@ -11,6 +11,7 @@ import {
     message
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import './index.scss';
 
 const { TextArea } = Input;
@@ -25,25 +26,14 @@ const getBase64 = (file) =>
 
 const RegistrationPage = () => {
     const [form] = Form.useForm();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        firstName: '',
-        lastName: '',
-        gender: null,
-        country: '',
-        description: '',
-        avatar: '',
-        age: 0,
-        interest: [],
-    });
     const [countries, setCountries] = useState([]);
     const [fileList, setFileList] = useState([]);
+    const navigate = useNavigate();
 
     const interestsOptions = [
-        { label: 'city views', value: 0 },
-        { label: 'natural views', value: 1 },
-        { label: 'historical sites', value: 2 },
+        { label: 'City views', value: 0 },
+        { label: 'Natural views', value: 1 },
+        { label: 'Historical sites', value: 2 },
         { label: 'Cultural scenes', value: 3 },
         { label: 'Adventure and sports', value: 4 },
     ];
@@ -66,86 +56,39 @@ const RegistrationPage = () => {
 
         fetchCountries();
     }, []);
-    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const validatePassword = (password) => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password);
-    const validateName = (name) => /^[a-zA-Z ]{1,50}$/.test(name);
-
-    const validateDescription = (description) => /^[a-zA-Z ]{1,200}$/.test(description);
-    const validateAge = (age) => age >= 15 && age <= 99;
-    const validateInterests = (interests) => interests.every(i => i >= 0 && i <= 4);
 
 
-    const onInterestChange = (checkedValues) => {
-        setFormData({ ...formData, interest: checkedValues });
-    };
 
-    const handleUploadChange = async ({fileList}) => {
-        //填充显示一下图片
-        //设置accept 允许上传的文件后缀（正则）
-        // 错误判断
-        const base64 = await getBase64(fileList[0].originFileObj);
-        console.log(base64)
-                // setFormData({ ...formData, avatar: base64 });
-        // setFileList(newFileList);
-        // if (file.status === 'done') {
-        //     try {
-        //         const base64 = await getBase64(file.originFileObj);
-        //         console.log(base64)
-        //         setFormData({ ...formData, avatar: base64 });
-        //     } catch (error) {
-        //         console.error('Error reading file:', error);
-        //     }
-        // }
+    const handleUploadChange = async ({ file, fileList: newFileList }) => {
+        setFileList(newFileList);
+
+        // 获取最后一个文件对象，即最新上传的文件
+        const latestFile = newFileList[newFileList.length - 1];
+
+        // 检查 latestFile 是否存在，并且具有 originFileObj 属性
+        if (latestFile && latestFile.originFileObj) {
+            try {
+                const base64 = await getBase64(latestFile.originFileObj);
+                console.log(base64);
+                form.setFieldsValue({ avatar: base64 });
+            } catch (error) {
+                console.error('Error reading file:', error);
+            }
+        }
     };
 
     // ...其他函数，例如 handleInputChange, handlePreview, handleChange...
 
-    const handleSubmit = async () => {
-        if (!validateEmail(formData.email)) {
-            message.error('Invalid email address');
-            return;
-        }
-        if (!validatePassword(formData.password)) {
-            message.error('The password is too weak. The password contains at least one digit, one lowercase letter, and one uppercase letter, and must contain at least eight characters');
-            return;
-        }
-        if (!validateName(formData.firstName)) {
-            message.error('Invalid first name');
-            return;
-        }
-        if (!validateName(formData.lastName)) {
-            message.error('Invalid last name');
-            return;
-        }
-        if (!formData.gender) {
-            message.error('Please select a gender');
-            return;
-        }
+    const handleSubmit = async (values) => {
+        console.log(values); // 这里会打印出所有表单字段的值
 
-        if (!formData.country) {
-            message.error('Please select a country');
-            return;
-        }
-
-        if (!formData.description || !validateDescription(formData.description)) {
-            message.error('Invalid description, description should be 1 to 200 letters');
-            return;
-        }
-        if (!validateAge(formData.age)) {
-            message.error('Must be between 15 and 99 years old');
-            return;
-        }
-        if (!validateInterests(formData.interest)) {
-            message.error('The selected interest is invalid');
-            return;
-        }
         try {
             const response = await fetch('http://localhost:3000/api/user/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(values)
             });
 
             if (!response.ok) {
@@ -154,9 +97,12 @@ const RegistrationPage = () => {
 
             const data = await response.json();
             console.log(data);
+            message.success('Registration successful');
+            navigate('/login');// 跳转到登录页面
             // 处理响应
         } catch (error) {
             console.error('error in submitting form', error);
+            message.error('Error submitting form');
             // 错误处理
         }
     };
@@ -172,39 +118,66 @@ const RegistrationPage = () => {
                 wrapperCol={{ span: 14 }}
                 style={{ maxWidth: 600 }}
             >
-                <Form.Item label="Email" name="email">
-                    <Input onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[{ required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email address' }]}
+                >
+                    <Input />
                 </Form.Item>
-                <Form.Item label="Password" name="password">
-                    <Input.Password onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[{ required: true, pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/, message: 'The password is too weak' }]}
+                >
+                    <Input.Password />
                 </Form.Item>
                 {/* ...其他表单元素... */}
-                <Form.Item label="First Name" name="firstName">
-                    <Input onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
+                <Form.Item
+                    label="First Name"
+                    name="firstName"
+                    rules={[{ required: true, pattern: /^[a-zA-Z ]{1,50}$/, message: 'Invalid first name' }]}
+                >
+                    <Input />
                 </Form.Item>
-                <Form.Item label="Last Name" name="lastName">
-                    <Input onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} />
+                <Form.Item
+                    label="Last Name"
+                    name="lastName"
+                    rules={[{ required: true, pattern: /^[a-zA-Z ]{1,50}$/, message: 'Invalid last name' }]}
+                >
+                    <Input  />
                 </Form.Item>
-                <Form.Item label="Gender" name="gender">
-                    <Radio.Group onChange={(e) => setFormData({ ...formData, gender: e.target.value })}>
+                <Form.Item
+                    label="Gender"
+                    name="gender"
+                    rules={[{ required: true, message: 'Please select a gender' }]}
+                >
+                    <Radio.Group >
                         <Radio value={0}>Female</Radio>
                         <Radio value={1}>Male</Radio>
                     </Radio.Group>
                 </Form.Item>
-                <Form.Item label="Country" name="country">
-                    <Select onChange={(value) => setFormData({ ...formData, country: value })}>
+                <Form.Item
+                    label="Country"
+                    name="country"
+                    rules={[{ required: true, message: 'Please select a country' }]}
+                >
+                    <Select >
                         {countries.map(country => (
                             <Select.Option key={country.id} value={country.id}>{country.name}</Select.Option>
                         ))}
                     </Select>
                 </Form.Item>
                 {/* ...其他表单元素... */}
-                <Form.Item label="Description" name="description">
-                    <TextArea rows={4} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+                <Form.Item
+                    label="Description"
+                    name="description"
+                    rules={[{ required: true, pattern: /^[a-zA-Z ]{1,200}$/, message: 'Invalid description, description should be 1 to 200 letters' }]}
+                >
+                    <TextArea rows={4} />
                 </Form.Item>
                 <Form.Item label="Avatar" name="avatar">
                     <Upload
-                        maxCount={1}
                         listType="picture-card"
                         fileList={fileList}
                         onChange={handleUploadChange}
@@ -213,11 +186,25 @@ const RegistrationPage = () => {
                         {fileList.length < 1 && <PlusOutlined />}
                     </Upload>
                 </Form.Item>
-                <Form.Item label="Age" name="age">
-                    <Input type="number" onChange={(e) => setFormData({ ...formData, age: e.target.value })} />
+                <Form.Item
+                    label="Age"
+                    name="age"
+                    rules={[
+                        { required: true, message: 'Please input your age' },
+                        { type: 'number', min: 15, max: 99, message: 'Age must be between 15 and 99' }
+                    ]}
+                    getValueFromEvent={(event) => {
+                        return parseInt(event.target.value, 10); // 转换字符串为数字
+                    }}
+                >
+                    <Input type="number"  />
                 </Form.Item>
-                <Form.Item label="Interests" name="interest">
-                    <Checkbox.Group options={interestsOptions} onChange={onInterestChange} />
+                <Form.Item 
+                label="Interests" 
+                name="interest"
+                rules={[{ required: true, message: 'Please select at least one interest', type: 'array' }]}
+                >
+                    <Checkbox.Group options={interestsOptions}/>
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 4 }}>
                     <Button type="primary" htmlType="submit">
