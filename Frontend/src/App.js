@@ -8,6 +8,8 @@ import Login from './pages/login';
 import Home from './pages/home';
 import UserManagement from './pages/userManagement';
 import UserComments from './pages/userComments';
+import SignUp from './pages/signUp';
+
 import Detail from "./pages/detail";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -26,6 +28,7 @@ function App() {
           <Route path="/detail" element={<Detail />}/>
           <Route path="/users" element={<UserManagement />} />
           <Route path="/comments" element={<UserComments />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </Layout>
     </BrowserRouter>
