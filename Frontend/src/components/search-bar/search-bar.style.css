@@ -1,0 +1,17 @@
+.search-container {
+    width: 1300px;
+    margin: 20px auto;
+}
+  
+@media only screen and (max-width: 1350px) {
+    .search-container {
+        width: 850px;
+        margin: 20px auto;
+    }
+}
+@media only screen and (max-width: 850px) {
+.search-container {
+    width: 400px;
+    margin: 20px auto;
+}
+}

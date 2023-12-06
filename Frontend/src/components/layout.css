@@ -1,7 +1,10 @@
-.navbar {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
+body {
+  background-color: #e2eaff !important;
+}
+
+.nav-txt {
+    color: #007bff !important;
+    font-size: 1.3rem !important;
 }
 
 .nav-list {
@@ -28,6 +31,12 @@
     text-decoration: underline;
 }
 
+.nav-container {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between !important;
+}
+
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -39,8 +48,38 @@
 }
 
 .footer {
-    background-color: #333;
-    color: #fff;
+    background-color: #cfe2ff;
+    color: #007bff;
     padding: 10px;
     text-align: center;
+    font-size: smaller;
+}
+
+.homepageLogo {
+    margin: 0 20px 0 40px;
+}
+
+.nav-profile {
+    width: max-content;
+    margin-right: 80px;
+}
+
+.search-bar {
+    margin-right: auto;
+}
+
+.nav-toggle {
+    margin-right: 40px;
+}
+
+@media only screen and (max-width: 991px) {
+    .nav-collapse {
+        padding: 0 3% 0 3%;
+        margin: 10px auto;
+    }
+    .nav-profile {
+        width: 100%;
+        margin: 10px auto;
+        text-align: center;
+    }
 }

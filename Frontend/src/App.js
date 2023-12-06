@@ -11,14 +11,16 @@ import UserComments from './pages/userComments';
 import Detail from "./pages/detail";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Homepage from './pages/homepage';
+
 function App() {
   return (
     <BrowserRouter>
       <Layout>
         <Routes>
           <Route path="/detail" element={<Detail />}/>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Homepage />} />
+          <Route path="/homepage" element={<Homepage />} />
           <Route path="/about" element={<About />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/contact" element={<Example />} />

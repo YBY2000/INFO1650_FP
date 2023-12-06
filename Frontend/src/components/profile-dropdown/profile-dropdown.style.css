@@ -1,0 +1,22 @@
+.dropdown-box {
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+svg {
+    margin-right: 20px;
+}
+.profile-name {
+    margin-left: 10px;
+}
+
+@media only screen and (max-width: 991px) {
+    .profile-badge {
+        width: 100% !important;
+    }
+    .profile-container {
+        width: 100%;
+    }
+    .profile-dropdown {
+        width: max-content;
+    }
+}
