@@ -82,7 +82,7 @@ const Detail = () => {
             setNextdisable(false);
         }
     }, [startIndex, commentNum])
-    if (!AttractionData || !CommentData) {
+    if (!AttractionData && !CommentData) {
         return <div>Loading...</div>; // 在数据加载时显示加载指示
     }
     const generateIndicatorButton = () => {
