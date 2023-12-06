@@ -328,7 +328,7 @@ const Detail = () => {
                         separator=">"
                         items={[
                             {
-                                href: '/Home',
+                                href: '/homepage',
                                 title: <HomeOutlined />,
                             },
                             {
