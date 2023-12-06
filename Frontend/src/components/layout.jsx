@@ -50,13 +50,13 @@ const Layout = ({ children }) => {
       <header>
         {/* Navbar */}
         <Navbar bg="light" expand="lg" className='nav-bar'>
-          <Navbar.Brand href="/homepage">
+          <Navbar.Brand href="/home">
             <img className='homepageLogo' height={50} src={process.env.PUBLIC_URL + '/favicon.png'} alt="Logo" />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarSupportedContent" className='nav-toggle' />
           <Navbar.Collapse id="navbarSupportedContent" className='nav-collapse'>
             <Nav className="me-auto">
-              <Nav.Link className='nav-txt' href="/homepage"><b>Home</b></Nav.Link>
+              <Nav.Link className='nav-txt' href="/home"><b>Home</b></Nav.Link>
               <Nav.Link className='nav-txt' href="/about"><b>About</b></Nav.Link>
             </Nav>
             <hr></hr>
