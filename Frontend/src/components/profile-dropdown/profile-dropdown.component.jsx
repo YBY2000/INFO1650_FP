@@ -30,7 +30,7 @@ const ProfileDropdown = ({ user }) => {
                 <Dropdown.Menu className='dropdwon-menu' placement="bottom">
                     <Dropdown.Item href="#action/3.2">
                         {/* {user.email} */}
-                        <p className='profile-info'><h4>Username</h4></p>
+                        <p className='profile-info'><h5>Username</h5></p>
                         <p className='profile-info'><b><i>name@email.com</i></b></p>
                         
                     </Dropdown.Item>

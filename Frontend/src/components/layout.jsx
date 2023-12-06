@@ -59,6 +59,7 @@ const Layout = ({ children }) => {
               <Nav.Link className='nav-txt' href="/homepage"><b>Home</b></Nav.Link>
               <Nav.Link className='nav-txt' href="/about"><b>About</b></Nav.Link>
             </Nav>
+            <hr></hr>
             <div className='nav-profile'>
               {isLoggedIn ? (
                 <ProfileDropdown userInfo={user} />
