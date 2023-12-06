@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
     Button,
     Checkbox,
@@ -8,7 +7,8 @@ import {
     Radio,
     Select,
     Upload,
-    message
+    message,
+    Flex
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -112,14 +112,11 @@ const RegistrationPage = () => {
 
 
     return (
-        <div className="formContainer">
+        <Flex className="formContainer"  justify='center'>
             <Form
                 form={form}
-                layout="horizontal"
+                layout="vertical"
                 onFinish={handleSubmit}
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 14 }}
-                style={{ maxWidth: 600 }}
             >
                 <Form.Item
                     label="Email"
@@ -209,13 +206,13 @@ const RegistrationPage = () => {
                 >
                     <Checkbox.Group options={interestsOptions}/>
                 </Form.Item>
-                <Form.Item wrapperCol={{ offset: 4 }}>
+                <Form.Item wrapperCol={{ offset: 10 }}>
                     <Button type="primary" htmlType="submit">
                         Register
                     </Button>
                 </Form.Item>
             </Form>
-        </div>
+        </Flex>
     );
 };
 

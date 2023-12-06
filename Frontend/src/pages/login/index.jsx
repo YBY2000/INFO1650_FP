@@ -9,20 +9,11 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
-
-  // const { request } = useRequest('/api/auth/login', { method: 'POST' }); // 更新请求 URL
-  const formRef = useRef(null); // 创建一个 ref 来引用表单
-
   const handleLogin = async (values) => {
     const { email, password } = values;
-
-    // 准备请求体
     const requestBody = { email, password };
 
     try {
-      // 发送 POST 请求到 API
-      // 如果使用 axios，替换下一行为：
-      // const response = await axios.post('http://localhost:3000/api/auth/login', requestBody);
       const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: {
@@ -34,16 +25,12 @@ const LoginPage = () => {
       const data = await response.json();
       if (data.success) {
         messageApi.success('Login successful!');
-        console.log(data.data);
         localStorage.setItem('token', data.data.token);
         localStorage.setItem('avatar', data.data.user.avatar);
         localStorage.setItem('fullName', data.data.user.fullName);
-
-        // 延迟跳转
         setTimeout(() => {
           navigate('/home');
         }, 3000); // 3000毫秒后跳转
-
       } else {
         messageApi.error(data.message || 'Login failed');
       }
@@ -53,24 +40,22 @@ const LoginPage = () => {
     }
   };
 
-  // 跳转到注册页面的函数
   const handleSignUp = () => {
     navigate('/signup');
   };
 
-  // 检查 token 是否过期
   useEffect(() => {
     const interval = setInterval(() => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         const decodedToken = jwtDecode(storedToken);
+        console.log(decodedToken)
         if (decodedToken.exp * 1000 < Date.now()) {
           localStorage.removeItem('token');
-          navigate('/login'); // 重定向到登录页
+          navigate('/login');
         }
       }
-    }, 60000); // 每分钟检查一次
-
+    }, 60000);
     return () => clearInterval(interval);
   }, [navigate]);
 
@@ -105,15 +90,6 @@ const LoginPage = () => {
           >
             <Input.Password />
           </Form.Item>
-
-          <Form.Item
-            name="remember"
-            valuePropName="checked"
-            wrapperCol={{ offset: 8, span: 16 }}
-          >
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
           <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
             <Button
               type="primary"
