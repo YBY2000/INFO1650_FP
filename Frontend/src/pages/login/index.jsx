@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './index.scss';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { Form, Input, Button, Checkbox, message } from 'antd';
+import { Form, Input, Button, Space, message, Flex } from 'antd';
 import useRequest from '../../hooks/useRequest';
 
 const LoginPage = () => {
@@ -63,54 +63,49 @@ const LoginPage = () => {
     <>
       {contextHolder}
       <div className="loginContainer">
-        <Form
-          form={form}
-          name="loginForm"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600, marginTop: 50 }}
-          initialValues={{ remember: true }}
-          onFinish={handleLogin}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'The input is not valid E-mail!' }]}
+        <Flex vertical align='center'>
+          <img src="../../../business-meeting.png" alt="Business Meeting" className="loginImage" />
+          <Form
+            form={form}
+            name="loginForm"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            style={{ maxWidth: 600, marginTop: 50 }}
+            initialValues={{ remember: true }}
+            onFinish={handleLogin}
+            autoComplete="off"
           >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' },
-            { min: 6, message: 'Password must be at least 6 characters' }]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ width: '70%' }}
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: 'Please input your email!' },
+              { type: 'email', message: 'The input is not valid E-mail!' }]}
             >
-              Log in
-            </Button>
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
-            <Button
-              style={{ width: '70%', backgroundColor: 'white', borderColor: 'white', color: 'black' }}
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[{ required: true, message: 'Please input your password!' },
+              { min: 6, message: 'Password must be at least 6 characters' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+          </Form>
+          <Space>
+            <Button type='link'
               onClick={handleSignUp}
             >
               Sign Up
             </Button>
-          </Form.Item>
-        </Form>
-
-        {/* 图片元素 */}
-        <img src="../../../business-meeting.png" alt="Business Meeting" className="loginImage" />
+            <Button
+              type='primary'
+              htmlType="submit"
+            >
+              Log in
+            </Button>
+          </Space>
+        </Flex>
       </div>
     </>
   );
