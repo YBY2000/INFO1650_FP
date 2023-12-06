@@ -83,12 +83,14 @@ const RegistrationPage = () => {
         console.log(values); // 这里会打印出所有表单字段的值
 
         try {
+            const submissionData = { ...values };
+            delete submissionData.avatar;
             const response = await fetch('http://localhost:3000/api/user/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values)
+                body: JSON.stringify(submissionData)
             });
 
             if (!response.ok) {
