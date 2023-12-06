@@ -2,30 +2,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import './index.scss';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import useRequest from '../../hooks/useRequest';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
+
   // const { request } = useRequest('/api/auth/login', { method: 'POST' }); // 更新请求 URL
   const formRef = useRef(null); // 创建一个 ref 来引用表单
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    // 使用 ref 检查表单的有效性
-    if (formRef.current && !formRef.current.checkValidity()) {
-      // 如果表单无效，显示错误消息
-      formRef.current.classList.add('was-validated'); // Bootstrap 类用于显示验证错误
-      return;
-    }
-
-    // 确保 email 和 password 不为空
-    if (!email || !password) {
-      alert('Please enter email and password');
-      return;
-    }
+  const handleLogin = async (values) => {
+    const { email, password } = values;
 
     // 准备请求体
     const requestBody = { email, password };
@@ -43,28 +32,31 @@ const LoginPage = () => {
       });
 
       const data = await response.json();
-
       if (data.success) {
-        alert('Login successful!');
+        messageApi.success('Login successful!');
         console.log(data.data);
         localStorage.setItem('token', data.data.token);
         localStorage.setItem('avatar', data.data.user.avatar);
         localStorage.setItem('fullName', data.data.user.fullName);
-        console.log(localStorage);
 
-        navigate('/home');
+        // 延迟跳转
+        setTimeout(() => {
+          navigate('/home');
+        }, 3000); // 3000毫秒后跳转
+
       } else {
-        alert(data.message || 'Login failed');
+        messageApi.error(data.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while logging in');
+      messageApi.error('An error occurred while logging in');
     }
   };
 
-  // const handleSignIn = () => {
-  //   navigate('/signup'); // 假设 '/signin' 是注册页面的路由
-  // };
+  // 跳转到注册页面的函数
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
 
   // 检查 token 是否过期
   useEffect(() => {
@@ -84,55 +76,65 @@ const LoginPage = () => {
 
   return (
     <>
-      <div id="liveAlertPlaceholder"></div>
-
-      <div id="backButtonContainer" className="backButtonContainer">
-
-      </div>
-
+      {contextHolder}
       <div className="loginContainer">
-        <div className="left">
-          <h1>Login now</h1>
-          <h1>To start your journey!</h1>
-          <form className="needs-validation" noValidate onSubmit={handleLogin} ref={formRef}>
-            <div className="mb-3">
-              <label htmlFor="inputEmail3" className="col-sm-2 col-form-label">Email</label>
-              <input
-                type="email"
-                className="form-control"
-                id="inputEmail3"
-                placeholder="xxx@xx.xxx"
-                required
-                pattern="^[a-zA-Z0-9._\\u002D]+@[a-zA-Z0-9._\\u002D]+\.[a-zA-Z]+"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="inputPassword3" className="col-sm-2 col-form-label">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                id="inputPassword3"
-                placeholder="At least 6 characters"
-                required
-                minLength="6"
-                maxLength="50"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div id="submitButton">
-              <button type="submit" className="btn btn-primary">Log in</button>
-            </div>
+        <Form
+          form={form}
+          name="loginForm"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600, marginTop: 50 }}
+          initialValues={{ remember: true }}
+          onFinish={handleLogin}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: 'Please input your email!' },
+            { type: 'email', message: 'The input is not valid E-mail!' }]}
+          >
+            <Input />
+          </Form.Item>
 
-            <div id="signUpButton">
-              {/* Replace the anchor tag with a button */}
-              <button className="btn btn-white" onClick={() => navigate('/signup')}>Sign Up</button>
-            </div>
-          </form>
-        </div>
-        <img src="../../../business-meeting.png" alt="Business Meeting" />
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' },
+            { min: 6, message: 'Password must be at least 6 characters' }]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <Form.Item
+            name="remember"
+            valuePropName="checked"
+            wrapperCol={{ offset: 8, span: 16 }}
+          >
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: '70%' }}
+            >
+              Log in
+            </Button>
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 12, span: 16 }}>
+            <Button
+              style={{ width: '70%', backgroundColor: 'white', borderColor: 'white', color: 'black' }}
+              onClick={handleSignUp}
+            >
+              Sign Up
+            </Button>
+          </Form.Item>
+        </Form>
+
+        {/* 图片元素 */}
+        <img src="../../../business-meeting.png" alt="Business Meeting" className="loginImage" />
       </div>
     </>
   );

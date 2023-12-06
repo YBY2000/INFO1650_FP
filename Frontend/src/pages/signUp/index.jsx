@@ -79,16 +79,23 @@ const RegistrationPage = () => {
         setFormData({ ...formData, interest: checkedValues });
     };
 
-    const handleUploadChange = async ({ file, fileList: newFileList }) => {
-        setFileList(newFileList);
-        if (file.status === 'done') {
-            try {
-                const base64 = await getBase64(file.originFileObj);
-                setFormData({ ...formData, avatar: base64 });
-            } catch (error) {
-                console.error('Error reading file:', error);
-            }
-        }
+    const handleUploadChange = async ({fileList}) => {
+        //填充显示一下图片
+        //设置accept 允许上传的文件后缀（正则）
+        // 错误判断
+        const base64 = await getBase64(fileList[0].originFileObj);
+        console.log(base64)
+                // setFormData({ ...formData, avatar: base64 });
+        // setFileList(newFileList);
+        // if (file.status === 'done') {
+        //     try {
+        //         const base64 = await getBase64(file.originFileObj);
+        //         console.log(base64)
+        //         setFormData({ ...formData, avatar: base64 });
+        //     } catch (error) {
+        //         console.error('Error reading file:', error);
+        //     }
+        // }
     };
 
     // ...其他函数，例如 handleInputChange, handlePreview, handleChange...
@@ -197,6 +204,7 @@ const RegistrationPage = () => {
                 </Form.Item>
                 <Form.Item label="Avatar" name="avatar">
                     <Upload
+                        maxCount={1}
                         listType="picture-card"
                         fileList={fileList}
                         onChange={handleUploadChange}
