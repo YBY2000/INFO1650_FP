@@ -48,12 +48,15 @@ body {
 }
 
 .footer {
-    background-color: #cfe2ff;
-    color: #007bff;
-    padding: 10px;
+    background-color: #1677ff;
+    color: white;
+    padding: 20px;
     text-align: center;
-    font-size: smaller;
-}
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    border-top: 1px solid #004085; 
+  }
+  
 
 .homepageLogo {
     margin: 0 20px 0 40px;
