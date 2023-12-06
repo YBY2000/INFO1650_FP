@@ -58,39 +58,50 @@ const RegistrationPage = () => {
     }, []);
 
 
-
-    const handleUploadChange = async ({ file, fileList: newFileList }) => {
-        const handleUploadChange = async ({ fileList: newFileList }) => {
-            setFileList(newFileList);
-
-            const latestFile = newFileList[newFileList.length - 1];
-            if (latestFile && latestFile.originFileObj) {
-                try {
-                    // 将文件对象转换为 Blob
-                    const blob = new Blob([latestFile.originFileObj], { type: latestFile.originFileObj.type });
-
-                    const formData = new FormData();
-                    formData.append('file', blob);
-
-                    const response = await fetch('http://localhost:3000/api/upload', {
-                        method: 'POST',
-                        body: formData,
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to upload file');
-                    }
-
-                    // 处理上传成功的响应
-                    const data = await response.json();
-                    console.log('File uploaded successfully', data);
-                } catch (error) {
-                    console.error('Error uploading file:', error);
-                }
-            }
-        };
-
+    const beforeUpload = (file) => {
+        const isImage = /\.(jpeg|jpg|png|gif)$/.test(file.name.toLowerCase());
+        if (!isImage) {
+            message.error('You can only upload image files!');
+        }
+        return isImage || Upload.LIST_IGNORE;
     };
+
+    const handleUploadChange = async ({ fileList: newFileList }) => {
+        console.log('Upload onChange triggered');
+        setFileList(newFileList);
+
+        const latestFile = newFileList[newFileList.length - 1];
+        if (latestFile && latestFile.originFileObj) {
+            try {
+                // 将文件对象转换为 Blob
+                const blob = new Blob([latestFile.originFileObj], { type: latestFile.originFileObj.type });
+                console.log(blob);
+
+                const formData = new FormData();
+                formData.append('file', blob);
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}:`, value);
+                }
+
+                const response = await fetch('http://localhost:3000/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload file');
+                }
+
+                // 处理上传成功的响应
+                const data = await response.json();
+
+                console.log('File uploaded successfully', data);
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            }
+        }
+    };
+
 
     // ...其他函数，例如 handleInputChange, handlePreview, handleChange...
 
@@ -198,7 +209,7 @@ const RegistrationPage = () => {
                         listType="picture-card"
                         fileList={fileList}
                         onChange={handleUploadChange}
-                        beforeUpload={() => false}
+                        beforeUpload={beforeUpload}
                     >
                         {fileList.length < 1 && <PlusOutlined />}
                     </Upload>
