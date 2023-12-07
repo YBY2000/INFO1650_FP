@@ -45,8 +45,8 @@ const ProfileDropdown = () => {
                             </Dropdown.Item>
                         </div>
                     ) : (
-                        <Dropdown.Item>
-                            <UserOutlined width="14" height="14" className='icon' />Edit Profile
+                        <Dropdown.Item onClick={() => { navigate('/editUser') }}>
+                            <UserOutlined width="14" height="14" className='icon'/>Edit Profile
                         </Dropdown.Item>
                     )}
 
