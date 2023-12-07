@@ -8,24 +8,25 @@ import './layout.css'; // Import the CSS file for styling
 import useAuth from '../hooks/useAuth';
 
 const Layout = ({ children }) => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const currentPath = window.location.pathname;
+  const location = useLocation();
   const [token, setToken] = useState(null);
 
-  const [isLoggedIn, setLoggedIn] = useState(false); // Replace with your actual authentication logic
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace with your actual authentication logic
   const { isAuthenticated, avatar, username, email, userType } = useAuth();
 
 
 
-  // Use useEffect to handle side effects when the component mounts
+  // Use useEffect to handle side effects whenthe component mounts
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    console.log(avatar);
+    
+    if (token!=null) {
       setToken(token);
-      setLoggedIn(true);
+      setIsLoggedIn(true);
     }
-  }, []);
+  }, [isAuthenticated]);
 
 
 
