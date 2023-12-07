@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { backend_url } from '../config';
 const useRequest = (url, options = {}) => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -12,7 +12,7 @@ const useRequest = (url, options = {}) => {
             'Content-Type': 'application/json',
         };
 
-        const defaultUrl = 'http://localhost:3000/api';
+        const defaultUrl = `${backend_url}/api`;
         let paramsStr = '?'
         for( let i in params) {
             paramsStr += `${i}=${params[i]}`

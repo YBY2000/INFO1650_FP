@@ -13,6 +13,7 @@ import {
 import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
+import { backend_url } from '../../config';
 
 const { TextArea } = Input;
 
@@ -41,7 +42,7 @@ const RegistrationPage = () => {
     useEffect(() => {
         const fetchCountries = async () => {
             try {
-                const response = await fetch('http://localhost:3000/api/country');
+                const response = await fetch(`${backend_url}/api/country`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
