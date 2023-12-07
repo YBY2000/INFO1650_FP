@@ -24,14 +24,23 @@ const getBase64 = (file) =>
         reader.onerror = error => reject(error);
     });
 
+const initialFileList = [
+    {
+        uid: '-1', // 文件唯一标识符，负数表示是预加载的文件
+        name: 'example.png', // 文件名
+        status: 'done', // 状态需要设置为 'done' 表示文件已经上传
+        url: 'https://resizing.flixster.com/xkP-QzPdNnU1Q8KQuBB6Q0YCeTU=/218x280/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/371287_v9_bc.jpg', // 图片 URL
+    },
+];
+
 const RegistrationPage = () => {
     const [form] = Form.useForm();
     const [countries, setCountries] = useState([]);
-    const [fileList, setFileList] = useState([]);
+    const [fileList, setFileList] = useState(initialFileList);
     const navigate = useNavigate();
     const { isAuthenticated, email } = useAuth();
-    const { request } = useRequest('/user', { method: 'POST'})
-    const { request: updateUser } = useRequest('/user/edit', { method: 'PUT'})
+    const { request } = useRequest('/user', { method: 'POST' })
+    const { request: updateUser } = useRequest('/user/edit', { method: 'PUT' })
     const interestsOptions = [
         { label: 'City views', value: 0 },
         { label: 'Natural views', value: 1 },
@@ -44,16 +53,16 @@ const RegistrationPage = () => {
         const info = await request({
             email
         })
-        if(info && info.data && info.data.users) {
+        if (info && info.data && info.data.users) {
             setUserInfo(info.data.users[0]);
         }
     }
     useEffect(() => {
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             navigate('/login');
-        }else {
+        } else {
             fetchUserInfo()
-        }   
+        }
     }, [])
     useEffect(() => {
         if (Object.keys(userInfo).length > 0) {
@@ -118,7 +127,7 @@ const RegistrationPage = () => {
         }
     };
     return (
-        <Flex className="formContainer"  justify='center'>
+        <Flex className="formContainer" justify='center'>
             <Form
                 form={form}
                 layout="vertical"
@@ -136,7 +145,7 @@ const RegistrationPage = () => {
                     name="lastName"
                     rules={[{ required: true, pattern: /^[a-zA-Z ]{1,50}$/, message: 'Invalid last name' }]}
                 >
-                    <Input  />
+                    <Input />
                 </Form.Item>
                 <Form.Item
                     label="Gender"
@@ -166,7 +175,7 @@ const RegistrationPage = () => {
                 >
                     <TextArea rows={4} />
                 </Form.Item>
-                <Form.Item label="Avatar" name="avatar" rules={[{required: true, message: 'You should upload your avatar'}]}>
+                <Form.Item label="Avatar" name="avatar" rules={[{ required: true, message: 'You should upload your avatar' }]}>
                     <Upload
                         listType="picture-card"
                         fileList={fileList}
@@ -184,17 +193,17 @@ const RegistrationPage = () => {
                         { type: 'number', min: 15, max: 99, message: 'Age must be between 15 and 99' }
                     ]}
                     getValueFromEvent={(event) => {
-                        return parseInt(event.target.value, 10); 
+                        return parseInt(event.target.value, 10);
                     }}
                 >
-                    <Input type="number"  />
+                    <Input type="number" />
                 </Form.Item>
-                <Form.Item 
-                label="Interests" 
-                name="interest"
-                rules={[{ required: true, message: 'Please select at least one interest', type: 'array' }]}
+                <Form.Item
+                    label="Interests"
+                    name="interest"
+                    rules={[{ required: true, message: 'Please select at least one interest', type: 'array' }]}
                 >
-                    <Checkbox.Group options={interestsOptions}/>
+                    <Checkbox.Group options={interestsOptions} />
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 10 }}>
                     <Button type="primary" htmlType="submit">
