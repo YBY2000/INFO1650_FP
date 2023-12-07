@@ -12,9 +12,8 @@ WeTour is a web platform designed to provide a comprehensive guide for tourists.
 - [Credits](#credits)
 - [License](#license)
 
-## Installation
-Steps to install the WeTour project on your local machine:
-
+## Live Website
+WeTour(https://info-6150-final-ui-vqwq.vercel.app/)
 
 ## Features
 - Login & SignUp
