@@ -24,7 +24,6 @@ exports.addComment = async (req, res) => {
             return res.error(404, 'User not found');
         }
         const review_time = new Date().getTime();
-        console.log(user.fullName)
         const newComment = new Comments({
             review_id: new mongoose.Types.ObjectId(),
             attraction_id,

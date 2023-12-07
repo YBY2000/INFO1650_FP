@@ -26,30 +26,36 @@ exports.createUser = async (req, res) => {
 
 exports.editUser = async (req, res) => {
     try {
-        const { email, password, fullName } = req.body;
+        const { email, firstName, lastName, gender, country, description, avatar, age, interest } = req.body;
         const user = await User.findOne({ email });
+
         if (!user) {
             return res.error(404, 'User not found');
         }
-        if (fullName) {
-            if (!/^[a-zA-Z ]{1,50}$/.test(fullName)) {
-                return res.error(400, 'Invalid full name format');
+
+        // 更新 fullName
+        if (firstName && lastName) {
+            if (!/^[a-zA-Z ]{1,50}$/.test(firstName) || !/^[a-zA-Z ]{1,50}$/.test(lastName)) {
+                return res.error(400, 'Invalid name format');
             }
-            user.fullName = fullName;
+            user.fullName = firstName + ' ' + lastName;
         }
-        if (password) {
-            // Validate password (customize the validation as needed)
-            if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password)) {
-                return res.error(400, 'Invalid password format');
-            }
-            user.password = password;
-        }
+
+        // 更新其他字段
+        if (gender !== undefined) user.gender = gender;
+        if (country !== undefined) user.country = country;
+        if (description !== undefined) user.description = description;
+        if (avatar !== undefined) user.avatar = avatar;
+        if (age !== undefined) user.age = age;
+        if (interest !== undefined) user.interest = interest;
+
         await user.save();
         res.success({ user }, 'User details updated successfully');
     } catch (error) {
         res.error(500, 'Internal server error');
     }
 };
+
 
 exports.deleteUser = async (req, res) => {
     try {

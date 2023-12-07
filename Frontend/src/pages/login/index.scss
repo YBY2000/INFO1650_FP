@@ -1,13 +1,20 @@
 /* index.css */
-
+.btn-secondary{
+    margin-bottom: 40px;
+}
 .login-page {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+#loginForm {
+    width: 100%;
+    overflow: hidden;
+    padding: 20px;
+}
+
 .login-container {
-    width: 400px;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -15,13 +22,7 @@
     margin-top: 50px;
 }
 
-/* Style the form */
-form {
-    display: flex;
-    flex-direction: column;
-}
 
-/* Style the form groups (label + input) */
 .form-group {
     margin-bottom: 20px;
     display: flex;
@@ -39,8 +40,6 @@ input {
     border-radius: 3px;
     font-size: 16px;
 }
-
-/* Style the submit button */
 button {
     background-color: #333;
     color: #fff;
@@ -51,4 +50,81 @@ button {
     font-size: 18px;
 }
 
-/* Add more styles as needed */
+.row{
+    margin-top: 30px;
+}
+.form-control{
+    width: 100%;
+    max-width: 350px;
+}
+
+.backButtonContainer{
+    width: auto;
+    margin-left: 200px;
+    margin-top: 30px;
+}
+
+.loginContainer{
+    margin-top: 50px;
+    img{
+        width: 300px;
+    }
+}
+.was-validated{
+    margin-top: 50px;
+    .btn{
+        margin-top: 10px;
+        width: 50%;
+    }
+}
+.needs-validation{
+    margin-top: 50px;
+    .btn{
+        margin-top: 10px;
+        width: 50%;
+    }
+}
+.left{
+    h1{
+        color: rgb(169, 125, 23);
+    }
+}
+h1{
+    font-size: 3vw;
+}
+
+.alert{
+    text-align:center
+}
+
+#submitButton{
+    width:350px;
+    text-align: center;
+}
+#signUpButton{
+    width:350px;
+    text-align: center;
+}
+
+.btn-white {
+  background-color: white;
+  color: black; /* or any color that suits your design */
+  /* Add other styling as needed */
+}
+
+@media (max-width: 800px) {
+    body {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        .backButtonContainer {
+            margin-left: 100px;
+            margin-right: auto;
+        }
+    }
+    h1{
+        font-size: 5vw !important;
+    }
+}

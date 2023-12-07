@@ -21,7 +21,7 @@ $containerwidth:70%
 .detail_pic_rate_container
   @include alignedwidth_center($containerwidth)
   margin-top: 5px
-  height: 450px
+  height: 480px
   display: flex
   background-color: #{$backcolor}
   border-radius: #{$radius}
@@ -35,6 +35,7 @@ $containerwidth:70%
   flex-direction: column
   background-color: #{$backcolor}
   border-radius: #{$radius}
+  padding-bottom: 10px
 %a1
   width: 48%
   height: 85%
@@ -103,22 +104,27 @@ $containerwidth:70%
 @media (max-width: 1300px)
   .detail_intro_container, .detail_comment_container
     margin-top: 15px !important
+    padding-top: 10px !important
+    padding-bottom: 10px !important
   .detail_pic_rate_container
     flex-direction: column !important
     height: auto !important
+    padding-bottom: 15px !important
     .detail_carousel_container
       height: auto !important
-      width: 90% !important
-      margin: 5px auto 0 auto !important
+      width: 75% !important
+      margin: 5px auto 15px auto !important
       max-width: 600px !important
     .detail_rate_info_container
       width: 90% !important
       margin: 10px auto auto auto !important
 @media (max-width: 800px)
+  .detail_pagination_container ul
+    height: 25px
   .detail_breadcrumb_container, .detail_pic_rate_container, .detail_intro_container, .detail_comment_container
     width: 98% !important
   .detail_intro_container, .detail_comment_container
-    margin-top: 5px !important
+    margin-top: 15px !important
   .detail_breadcrumb_container
     height: 23px !important
   .detail_comment_container
