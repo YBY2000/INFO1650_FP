@@ -1,8 +1,9 @@
-
 import React, { useState, useEffect } from 'react'
 import './index.sass' // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest'
 import { Table, Space, Input, Button, Select, Form, Row, message } from 'antd'
+import moment from 'moment';
+
 
 const countryOptions = [
   {
@@ -123,7 +124,6 @@ const Contact = () => {
     method: 'DELETE',
   })
 
-
   const columns = [
     {
       title: 'ID',
@@ -144,7 +144,6 @@ const Contact = () => {
       render: (txt, row) => (row.gender ? <>male</> : <>female</>),
     },
     {
-
       title: 'Age',
       dataIndex: 'age',
       defaultSortOrder: 'descend',
@@ -167,8 +166,12 @@ const Contact = () => {
       title: 'Creation Time',
       dataIndex: 'createdAt',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => a.createdAt - b.createdAt,
+      sorter: (a, b) => moment(a.createdAt).unix() - moment(b.createdAt).unix(),
+      render: (text) => {
+        return moment(text).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
+    
     {
       title: 'E-mail',
       dataIndex: 'email',
@@ -177,10 +180,6 @@ const Contact = () => {
       // here is that finding the name started with `value`
       sorter: (a, b) => a.email.length - b.email.length,
       sortDirections: ['descend'],
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
     },
     {
       title: 'Description',
@@ -193,7 +192,6 @@ const Contact = () => {
         return row
           .map((r) => InterestsOptions.find((i) => i.value == r).label)
           .join(',')
-
       },
     },
     {
@@ -334,6 +332,4 @@ const Contact = () => {
   )
 }
 
-
 export default Contact
-
