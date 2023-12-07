@@ -1,42 +1,45 @@
-import React, { useEffect } from 'react';
-import './index.css'; // Import the CSS file for styling
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import Cards from '../../components/cardList';
+import SearchBar from '../../components/search-bar/search-bar.component';
+import './homepage.style.css';
+import useRequest from '../../hooks/useRequest';
 
-const Homepage = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-    }
-  }, [navigate]);
-  return (
-    <div className="homepage-container">
-      <h1 className="homepage-heading">Welcome to My Portfolio</h1>
+const Home = () => {
+    const [attractions, setAttractions] = useState([]);
+    const [searchField, setSearchField] = useState('');
+    const { request: requestAttraction, isLoading: isLoadingAttraction, error: errorAttraction } = useRequest(`/attraction/getAll`, { method: 'GET' });
 
-      <div className="education">
-        <h2>Education</h2>
-        <p>
-          <strong>Master of Science in Information Systems, Northeastern University, Boston</strong><br />
-          Jan 2022 - May 2023
-        </p>
-        <p>
-          <strong>Bachelor of Science in Information System, Zhejiang Sci-Tech University, China</strong><br />
-          Sep 2016 - Jul 2020
-        </p>
-      </div>
+    const fetchData = async () => {
+        try {
+            const attrData = await requestAttraction();
+            if (!errorAttraction) {
+                setAttractions(attrData.data.attractions);
+            }
+        } catch (error) {
+            console.error('Error fetching attraction data:', error);
+        }
+    };
 
-      <div className="skills">
-        <h2>Skills</h2>
-        <ul>
-          <li>Programming Languages: Java, JavaScript, TypeScript, Python, HTML, CSS, SQL, NoSQL(MongoDB), R, GraphQL, C, Script language(shell, JSON, XML)</li>
-          <li>Frameworks: React.js (Redux, React hooks), Vue.js, Node.js, Git, Linux, Spring, RocketMQ, D3.js</li>
-          <li>Others: Distributed system (Hadoop, Redis), Server Deployment and Cloud Services (AWS, Docker, Jenkins, Maven)</li>
-          <li>Microsoft Office applications (Word, Excel), Agile methodologies, Performance Test, Problem-solving and analytical skills, Personality (interpersonal communication skills, self-motivated, leadership)</li>
-        </ul>
-      </div>
-    </div>
-  );
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const onSearchChange = (e) => {
+        const searchField = e.target.value.toLowerCase();
+        setSearchField(searchField);
+    };
+
+    // Check if attractions is undefined before calling filter
+    const filteredAttractions = attractions && attractions.filter((attraction) =>
+        attraction.name.toLowerCase().includes(searchField)
+    );
+
+    return (
+        <div className="homepageApp">
+            <SearchBar onChangeHandler={onSearchChange} />
+            <Cards attractions={filteredAttractions || []} />
+        </div>
+    );
 };
 
-export default Homepage;
+export default Home;

@@ -329,7 +329,7 @@ const Detail = () => {
                         separator=">"
                         items={[
                             {
-                                href: '/Home',
+                                href: '/home',
                                 title: <HomeOutlined />,
                             },
                             {

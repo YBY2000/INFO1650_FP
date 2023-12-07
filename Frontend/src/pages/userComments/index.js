@@ -1,9 +1,7 @@
-
 import React, { useEffect, useState } from 'react'
 import './index.sass' // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest'
-import { Table, Space, Badge, message } from 'antd'
-
+import { Table, Button, Badge, message } from 'antd'
 
 const Contact = () => {
   const [data, setData] = useState()
@@ -17,16 +15,13 @@ const Contact = () => {
   const fetchData = async () => {
     const res = await request()
     if (!error) {
-
       setData(res.data.attractions)
-
     }
   }
 
   useEffect(() => {
     fetchData()
   }, [])
-
 
   const columns = [
     {
@@ -50,17 +45,16 @@ const Contact = () => {
       title: 'Latest Comment creation time:',
       dataIndex: 'latest_comment_time',
       key: 'latest_comment_time',
+      render: (txt, row) => {
+        const date = new Date(txt);
+        return txt ? date.toLocaleString(): 'No Data';
+      },
     },
     {
       title: 'Official Tel',
       dataIndex: 'official_tel',
       key: 'official_tel',
-    },
-    // {
-    //   title: 'Action',
-    //   key: 'operation',
-    //   render: () => <a>Publish</a>,
-    // },
+    }
   ]
 
   const expandedRowRender = (e) => {
@@ -72,12 +66,25 @@ const Contact = () => {
         render: (text, record, index) => <span>{index+1}</span>,
       },
       {
+        title: "Posted by", 
+        dataIndex: 'reviewer_email',
+      },
+      {
+        title: 'Post Title',
+        dataIndex: 'review_title'
+      },
+      {
         title: 'Content',
         dataIndex: 'detailed_review',
         key: 'detailed_review',
       },
       {
-        title: 'Post Data',
+        title: 'Rate',
+        dataIndex: 'star_rating',
+        render: (val) => <Badge count={val} color={val>=3 ? '#52c41a': '#f5222d'} />
+      },
+      {
+        title: 'Post Date',
         dataIndex: 'review_time',
         key: 'review_time',
       },
@@ -91,16 +98,14 @@ const Contact = () => {
           ) : (
             <Badge status='success' text='enable' />
           ),
-
       },
       {
         title: 'Action',
         dataIndex: 'operation',
         key: 'operation',
-
         render: (text, row) => (
-          <Space size='middle'>
-            <a
+            <Button
+              type='link'
               onClick={() => {
                 switchStatus(null, { review_id: row.review_id }).then((res) => {
                   message.success(res.message)
@@ -109,8 +114,7 @@ const Contact = () => {
               }}
             >
               Switch
-            </a>
-          </Space>
+            </Button>
         ),
       },
     ]
@@ -140,4 +144,3 @@ const Contact = () => {
 }
 
 export default Contact
-
