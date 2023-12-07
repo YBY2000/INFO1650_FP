@@ -113,16 +113,20 @@ const RegistrationPage = () => {
         }
     };
     const handleSubmit = async (values) => {
-        console.log(values); // 这里会打印出所有表单字段的值
         try {
             const submissionData = { ...values, email, avatar: 'https://gravatar.com/avatar/eae1eb440aaf5659719d518606a6657e?s=400&d=robohash&r=x' };
             const response = await updateUser(submissionData);
             if (!response.success) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            const user = response.data.user;
+            console.log(user)
+            localStorage.setItem('avatar',user.avatar);
+            localStorage.setItem('fullName', user.fullName);
             message.success('Update successful');
             navigate('/');
         } catch (error) {
+            console.log(error)
             console.error('error in submitting form', error);
             message.error('Error submitting form');
         }

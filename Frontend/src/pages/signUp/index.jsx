@@ -84,7 +84,7 @@ const RegistrationPage = () => {
         console.log(values); // 这里会打印出所有表单字段的值
         try {
             const submissionData = { ...values, avatar: 'https://resizing.flixster.com/xkP-QzPdNnU1Q8KQuBB6Q0YCeTU=/218x280/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/371287_v9_bc.jpg' };
-            const response = await fetch('http://localhost:3000/api/user/create', {
+            const response = await fetch(`${backend_url}/api/user/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +97,6 @@ const RegistrationPage = () => {
             }
 
             const data = await response.json();
-            console.log(data);
             message.success('Registration successful');
             navigate('/login');// 跳转到登录页面
             // 处理响应
