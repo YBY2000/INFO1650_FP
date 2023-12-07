@@ -28,7 +28,8 @@ body {
 }
 
 .nav-link:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: #61adff !important;
 }
 
 .nav-container {
