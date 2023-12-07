@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import './profile-dropdown.style.css'; // Import the CSS file for styling
 import { Badge, Avatar } from 'antd';
-import { useNavigate, useEffect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { UsergroupAddOutlined, CommentOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import useAuth from '../../hooks/useAuth';
 
