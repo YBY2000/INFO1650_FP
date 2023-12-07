@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import './profile-dropdown.style.css'; // Import the CSS file for styling
 import { Badge, Avatar } from 'antd';
@@ -14,10 +14,6 @@ const ProfileDropdown = () => {
         navigate(`/edit`);
     };
     const { isAuthenticated, avatar, username, email, userType } = useAuth();
-    // console.log(avatar);
-    // console.log(username)
-    // console.log(email)
-    // console.log(userType)
     return (
         <div className='profile-container'>
             <Dropdown className='dropdown-box'>
