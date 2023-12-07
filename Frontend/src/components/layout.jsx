@@ -1,35 +1,15 @@
 // Layout.js
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import ProfileDropdown from './profile-dropdown/profile-dropdown.component';
-import './layout.css'; // Import the CSS file for styling
+import './layout.css';
 import useAuth from '../hooks/useAuth';
 
 const Layout = ({ children }) => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const [token, setToken] = useState(null);
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace with your actual authentication logic
-  const { isAuthenticated, avatar, username, email, userType } = useAuth();
-
-
-
-  // Use useEffect to handle side effects whenthe component mounts
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    console.log(avatar);
-    
-    if (token!=null) {
-      setToken(token);
-      setIsLoggedIn(true);
-    }
-  }, [isAuthenticated]);
-
-
-
+  const { isAuthenticated } = useAuth();
   return (
     <div className="wrapper">
       <header>
@@ -46,7 +26,7 @@ const Layout = ({ children }) => {
             </Nav>
             <hr></hr>
             <div className='nav-profile'>
-              {isLoggedIn ? (
+              {isAuthenticated ? (
                 <ProfileDropdown />
               ) : (
                 !(location.pathname === '/login') && (<Link to="/login" className="d-block link-body-emphasis text-decoration-none">
@@ -58,7 +38,6 @@ const Layout = ({ children }) => {
           </Navbar.Collapse>
         </Navbar>
       </header>
-
       <main className="content-container">{children}</main>
       <footer className="footer">
         Final Project &copy; {new Date().getFullYear()} INFO 6150 group 5

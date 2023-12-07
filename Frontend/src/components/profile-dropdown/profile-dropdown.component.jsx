@@ -1,43 +1,26 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Dropdown } from 'react-bootstrap';
-import './profile-dropdown.style.css'; // Import the CSS file for styling
+import './profile-dropdown.style.css';
 import { Badge, Avatar } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { UsergroupAddOutlined, CommentOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UsergroupAddOutlined, UserOutlined, LogoutOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import useAuth from '../../hooks/useAuth';
 
 
 const ProfileDropdown = () => {
     const navigate = useNavigate();
-
-    const pageSwitch = (path) => {
-        navigate(`/${path}`);
-    };
-
-    const { isAuthenticated, avatar, username, email, userType } = useAuth();
-
+    const { avatar, username, email, userType } = useAuth();
     const handleLogout = () => {
-        localStorage.removeItem('email');
-        localStorage.removeItem('token');
-        
-        console.log(email);
-        
+        localStorage.clear()
         navigate('/login');
     };
-
-
-
     return (
         <div className='profile-container'>
             <Dropdown className='dropdown-box'>
                 <Dropdown.Toggle variant="light" id="profile-dropdown">
-                    {/* <Badge count={100} overflowCount={99}>
-                        <img src={process.env.PUBLIC_URL + '/profile.jpg'} alt="avatar" width="50" height="50" size="large" />
-                    </Badge> */}
-
                     <Badge count={100}>
-                        <Avatar shape="square" size="large" />
+                        <Avatar shape="square" size="large" src={avatar} />
                         {/* <img src={process.env.PUBLIC_URL + '/profile.jpg'} alt="avatar" width="40" height="40" size="large" className='profile-avatar'/> */}
                     </Badge>
                     <span className="profile-name">
@@ -52,27 +35,24 @@ const ProfileDropdown = () => {
 
                     </Dropdown.Item>
                     <Dropdown.Divider />
-
-
-
-                    {(userType === 1) ? (
+                    {(userType == 1) ? (
                         <div>
-                            <Dropdown.Item onClick={() => { pageSwitch('userComments') }}>
-                                <EditOutlined width="14" height="14" className='icon' />Manage Comment
+                            <Dropdown.Item onClick={() => { navigate('/comments') }}>
+                                <UserDeleteOutlined width="14" height="14" className='icon' />Manage Comment
                             </Dropdown.Item>
-                            <Dropdown.Item onClick={() => { pageSwitch('userManagement') }}>
+                            <Dropdown.Item onClick={() => { navigate('/users') }}>
                                 <UsergroupAddOutlined width="14" height="14" className='icon' />Manage User
                             </Dropdown.Item>
                         </div>
                     ) : (
                         <Dropdown.Item>
-                            <CommentOutlined width="14" height="14" className='icon' />Edit Profile
+                            <UserOutlined width="14" height="14" className='icon' />Edit Profile
                         </Dropdown.Item>
                     )}
 
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={() => { handleLogout() }}>
-                        <LogoutOutlined width="14" height="14" className='icon' />LOGOUT
+                        <LogoutOutlined width="14" height="14" className='icon' />LogOut
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>

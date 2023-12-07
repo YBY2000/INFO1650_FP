@@ -13,7 +13,6 @@ const Home = () => {
         try {
             const attrData = await requestAttraction();
             if (!errorAttraction) {
-                console.log(attrData);
                 setAttractions(attrData.data.attractions);
             }
         } catch (error) {
