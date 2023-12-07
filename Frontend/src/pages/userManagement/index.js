@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect } from 'react'
-import './index.sass' // Import the CSS file for styling
+import './index.css' // Import the CSS file for styling
 import useRequest from '../../hooks/useRequest'
-import { Table, Space, Input, Button, Select, Form, Row, message } from 'antd'
+import { Table, Space, Input, Button, Select, Form, Row, message, Tag, Typography  } from 'antd'
+const { Text } = Typography;
 
 const countryOptions = [
   {
@@ -132,8 +133,6 @@ const Contact = () => {
     {
       title: 'User Name',
       dataIndex: 'fullName',
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
       onFilter: (value, record) => record.fullName.indexOf(value) === 0,
       sorter: (a, b) => a.fullName.length - b.fullName.length,
       sortDirections: ['descend'],
@@ -157,59 +156,71 @@ const Contact = () => {
         return countryOptions.find((c) => c.value == txt)?.label || ''
       },
     },
-    // {
-    //   title: 'Comments Count',
-    //   dataIndex: 'usercomments',
-    //   defaultSortOrder: 'descend',
-    //   sorter: (a, b) => a.usercomments - b.age,
-    // },
     {
       title: 'Creation Time',
       dataIndex: 'createdAt',
       defaultSortOrder: 'descend',
+      width: 200,
+      render: (txt, row) => {
+        const date = new Date(txt);
+        return date.toLocaleString();
+      },
       sorter: (a, b) => a.createdAt - b.createdAt,
     },
     {
       title: 'E-mail',
       dataIndex: 'email',
       filters: emailFilter,
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
       sorter: (a, b) => a.email.length - b.email.length,
       sortDirections: ['descend'],
+      render: (text) => (
+        <Text copyable={{ text: text }}>
+          {text}
+        </Text>
+      )
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
+      title: 'UserType',
+      dataIndex: 'userType',
+      render: (val) => {
+        return val == 1 ? <Tag color='#108ee9'>Admin</Tag>:<Tag color="green">Normal user</Tag>
+      }
     },
     {
       title: 'Description',
-      dataIndex: 'description',
+      dataIndex: 'description'
     },
     {
       title: 'Interests',
       dataIndex: 'interest',
-      render: (row, text) => {
-        return row
-          .map((r) => InterestsOptions.find((i) => i.value == r).label)
-          .join(',')
-
-      },
+      render: (interests) => (
+        <>
+          {interests.map((interest) => {
+            const option = InterestsOptions.find((opt) => opt.value === interest);
+            return (
+              <Tag color="blue" key={interest}>
+                {option ? option.label : interest}
+              </Tag>
+            );
+          })}
+        </>
+      ),
     },
     {
       title: 'Action',
       key: 'operation',
-      fixed: 'right',
-      width: 200,
+      // width: 200,
       render: (txt, row) => (
         <div>
-          <a
+          <Button
+            type="text"
+            danger
             onClick={() => {
               deleteRow(row)
             }}
           >
             Delete
-          </a>
+          </Button>
         </div>
       ),
     },
@@ -256,7 +267,7 @@ const Contact = () => {
   }, [])
 
   return (
-    <>
+    <div className='usersManagement-container'>
       <Space
         style={{
           margin: '20px 50px',
@@ -330,7 +341,7 @@ const Contact = () => {
         columns={columns}
         dataSource={data}
       />
-    </>
+    </div>
   )
 }
 
